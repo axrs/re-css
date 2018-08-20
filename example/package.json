@@ -1,0 +1,21 @@
+{
+  "name": "re-css-example",
+  "version": "0.0.1-SNAPSHOT",
+  "author": " @axrs",
+  "homepage": "https://github.com/axrs/re-css/example",
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "jss": "^9.8.7",
+    "jss-default-unit": "^8.0.2",
+    "jss-nested": "^6.0.1",
+    "jss-vendor-prefixer": "^8.0.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "devDependencies": {
+    "shadow-cljs": "2.4.33"
+  }
+}

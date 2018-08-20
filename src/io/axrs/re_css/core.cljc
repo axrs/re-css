@@ -1,4 +1,5 @@
-(ns io.axrs.re-css.macros
+(ns io.axrs.re-css.core
+  #?(:cljs (:require-macros io.axrs.re-css.core))
   #?(:cljs
      (:require
        [reagent.core]
@@ -12,4 +13,6 @@
        (reagent.core/create-class
          {:component-will-unmount (fn [this#]
                                     (io.axrs.re-css.jss/detach ~'hash))
-          :reagent-render         ~render-fn}))))
+          :reagent-render         (if (fn? ~render-fn)
+                                    ~render-fn
+                                    (fn ~args ~render-fn))}))))

@@ -1,0 +1,10 @@
+{:builds
+       {:example {:asset-path      "/js/compiled"
+                  :closure-defines {goog.DEBUG true}
+                  :devtools        {:after-load io.axrs.re-css.example.core/mount-root
+                                    :http-port  8080
+                                    :http-root  "resources/public"}
+                  :modules         {:app {:entries [io.axrs.re-css.example.core]}}
+                  :output-dir      "resources/public/js/compiled"
+                  :target          :browser}}
+ :lein true}
