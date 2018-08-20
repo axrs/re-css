@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+./rudolph-pwa.sh "format"
+git ls-files --modified | xargs git add

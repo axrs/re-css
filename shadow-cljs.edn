@@ -1,0 +1,5 @@
+{:builds
+       {:test {:closure-defines {goog.DEBUG false}
+               :output-to       "target/karma/test.js"
+               :target          :karma}}
+ :lein true}
