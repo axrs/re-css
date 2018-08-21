@@ -3,6 +3,8 @@
     [io.axrs.re-css.core :refer [defui]]
     [reagent.core :as r :refer-macros [with-let]]))
 
+(def now (r/atom nil))
+
 (def ^:private button-style
   {:button {
             :background-color "#4CAF50"
@@ -20,19 +22,17 @@
 (def ^:private black-button-style
   (assoc-in button-style [:button :background-color] "#555555"))
 
-(defn render [css]
-  (fn [attrs text]
-    [:button (merge attrs (css "button")) text]))
+(defn render-fn [{:keys [css] :as attrs} text]
+  [:button (merge attrs (css "button")) (str text @now)])
 
-(defui button button-style [attrs text]
-  (render css))
+(defui button button-style [attrs text] render-fn)
 
 (defui blue-button blue-button-style [attrs text]
-  [:button (merge attrs (css "button")) text])
+  [:button (merge attrs (css "button")) (str text @now)])
 
 (defui black-button black-button-style [attrs text]
   (fn [attrs text]
-    [:button (merge attrs (css "button")) text]))
+    [:button (merge attrs (css "button")) (str text @now)]))
 
 (defn view []
   [:div
@@ -43,6 +43,7 @@
 
 (defn mount-root
   []
+  (js/setInterval #(reset! now (js/Date.now)) 1000)
   (r/render [view]
     (js/document.getElementById "example")))
 

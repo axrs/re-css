@@ -14,5 +14,6 @@
          {:component-will-unmount (fn [this#]
                                     (io.axrs.re-css.jss/detach ~'hash))
           :reagent-render         (if (fn? ~render-fn)
-                                    ~render-fn
+                                    (fn ~args
+                                      (apply ~render-fn (update-in ~args [0] assoc :css ~'css)))
                                     (fn ~args ~render-fn))}))))
