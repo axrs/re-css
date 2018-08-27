@@ -39,6 +39,11 @@ TODO:
 ### Example
 
 ```clojure
+(ns io.axrs.re-css.example.core
+  (:require
+    [io.axrs.re-css.core :refer [defui]]
+    [reagent.core :as r]))
+
 ; A basic component style map showing CSS properties which will eventually be attached
 ; to an inline stylesheet as a generated `button-x-x-x` class
 (def ^:private button-style
