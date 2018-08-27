@@ -24,9 +24,10 @@ component has been removed).
 **re-css** aims to:
 
 -   Bring CSS and component code together
--   Reduce unnecessary CSS declaration (by only defining what the component needs, not what it needs to override)
+-   Reduce unnecessary CSS declaration (by only defining what the component needs, not what it has to override)
 -   Remove a potential build tool (SASS/LESS)
 -   Eliminate class name collisions
+-   Provide a clean path moving forward (assist moving away from legacy styles)
 
 ## Getting Started
 
