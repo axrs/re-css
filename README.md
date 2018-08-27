@@ -38,6 +38,51 @@ TODO:
 
 ### Example
 
+```clojure
+; A basic component style map showing CSS properties which will eventually be attached
+; to an inline stylesheet as a generated `button-x-x-x` class
+(def ^:private button-style
+  {:button {:background-color "#4CAF50"
+            :border           "none"
+            :color            "white"
+            :display          "inline-block"
+            :font-size        "16px"
+            :padding          "15px 32px"
+            :text-align       "center"
+            :text-decoration  "none"}})
+
+(defn render-button
+  "A basic reagent button component"
+  [{:keys [css] :as attrs} text]
+  [:button (merge attrs (when css (css "button")))
+   text " | count " @count])
+
+; A styled reagent button component using the basic component
+; (Note: Form-0 is not really a thing. It's really a just a symbol)
+(defui form-0 button-style [attrs text] render-button)
+
+; Another styled reagent button component mirroring a Form 1
+(defui form-1 button-style [attrs text]
+  [:button (merge attrs (css "button"))
+   text " | count " @count])
+
+; Another styled reagent button component mirroring a Form 2 (state capturing)
+(defui form-2 button-style [attrs text]
+  (let [initial-count @count]
+    (fn [attrs text]
+      [:button (merge attrs (css "button"))
+       text " | count " @count
+       " (initial was " initial-count ")"])))
+
+; Another styled reagent button component mirroring a Form 3 (lifecycle capturing)
+(defui form-3 button-style [attrs text]
+  {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
+   :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
+   :reagent-render         (fn [attrs text]
+                             [:button (merge attrs (css "button"))
+                              text " | count " @count])})
+```
+
 [View Source][4]
 
 > You can run the example project using [Shadow-CLJS][7] by
