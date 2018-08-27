@@ -27,7 +27,9 @@
         [hash style]))))
 
 (defn detach [hash]
-  (let [[_ count] (get @sheets hash)]
+  (let [[style count] (get @sheets hash)]
     (if (= 1 count)
-      (swap! sheets dissoc hash)
+      (do
+        (.detach style)
+        (swap! sheets dissoc hash))
       (swap! sheets update-in [hash 1] dec))))
