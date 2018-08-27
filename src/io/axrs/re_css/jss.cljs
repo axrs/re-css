@@ -1,7 +1,6 @@
 (ns io.axrs.re-css.jss
   (:require
    ["jss" :as jss]
-   ["jss-default-unit" :default default-unit]
    ["jss-nested" :default nested]
    ["jss-vendor-prefixer" :default vendor-prefixer]))
 

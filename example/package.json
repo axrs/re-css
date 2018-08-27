@@ -6,7 +6,6 @@
   "dependencies": {
     "create-react-class": "^15.6.3",
     "jss": "^9.8.7",
-    "jss-default-unit": "^8.0.2",
     "jss-nested": "^6.0.1",
     "jss-vendor-prefixer": "^8.0.1",
     "react": "^16.4.2",
