@@ -16,6 +16,6 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "shadow-cljs": "2.4.33"
+    "shadow-cljs": "^2.6.3"
   }
 }

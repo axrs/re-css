@@ -31,6 +31,9 @@ _re-css_ aims to:
 ## Getting Started
 
 TODO:
+-   Add Karma Unit Tests for `defui` and JSS wrapper
+-   Setup CI integration
+-   Clojar deployment
 
 ### Example
 

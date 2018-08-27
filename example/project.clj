@@ -2,7 +2,7 @@
   :min-lein-version "2.8.1"
   :source-paths ["src" "../src"]
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
-  :dependencies [[thheller/shadow-cljs "2.4.33"]
+  :dependencies [[thheller/shadow-cljs "2.6.3"]
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript
                   "1.10.238"
