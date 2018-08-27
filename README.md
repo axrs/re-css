@@ -14,7 +14,7 @@ JSS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
 
 ## Overview
 
-**re-css** provides a simplistic macro to independently style reagent components (Form-1, Form-2, and Form-3) in re-frame
+**re-css** provides a simplistic macro to independently style reagent components (Form-1, Form-2, and Form-3) in [re-frame][2]
 or [reagent][1] applications. Ultimately removing the pains of cascading styles, name collisions and code/style separation.
 
 **re-css** leverages [JSS][3] to inject individual inline stylesheets (defined with the component as EDN structures) into
