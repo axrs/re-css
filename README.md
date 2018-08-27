@@ -53,7 +53,7 @@ npx shadow-cljs watch example
 ## Code Quality
 
 **re-css** uses several code quality tools (like linting) to ensure consistency in formatting between editors and developers.
-These tools should be automatically applied before each commit through the use of the `pre-commit` hook.
+These tools should be automatically applied before each commit through the use of the [`pre-commit` hook][12].
 
 | Source            | Tool   | Website                                    |
 | ----------------- | ------ | ------------------------------------------ |
@@ -81,3 +81,5 @@ These tools should be automatically applied before each commit through the use o
 [10]: #example
 
 [11]: #code-quality
+
+[12]: githooks/pre-commit
