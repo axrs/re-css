@@ -40,7 +40,7 @@ TODO:
 
 [View Source][4]
 
-You can also see and play with the example code by using [Shadow-CLJS][7] to compile and watch the source files for any changes
+> You can run the example project using [Shadow-CLJS][7] by
 
 ```bash
 git clone git@github.com:axrs/re-css.git
