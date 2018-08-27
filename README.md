@@ -86,6 +86,18 @@ TODO:
    :reagent-render         (fn [attrs text]
                              [:button (merge attrs (css "button"))
                               text " | count " @count])})
+
+(defn view
+  "A simple Reagent app view to track the number of button clicks"
+  []
+  (let [inc-counter #(swap! count inc)]
+    [:div
+     [render-button {:on-click inc-counter} "Default"]
+     [form-0 {:on-click inc-counter} "Form 0"]
+     [form-1 {:on-click inc-counter} "Form 1"]
+     [form-2 {:on-click inc-counter} "Form 2"]
+     (when (zero? (mod @count 5))
+       [form-3 {:on-click inc-counter} "Form 3"])))
 ```
 
 [View Source][4]
