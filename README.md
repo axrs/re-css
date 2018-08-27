@@ -55,9 +55,9 @@ npx shadow-cljs watch example
 **re-css** uses several code quality tools (like linting) to ensure consistency in formatting between editors and developers.
 These tools should be automatically applied before each commit through the use of the `pre-commit` hook.
 
-| Source            | Tool   | Website                                     |
-| ----------------- | ------ | ------------------------------------------- |
-| Markdown          | Remark | [https://remark.js.org/][5]                 |
+| Source            | Tool   | Website                                    |
+| ----------------- | ------ | ------------------------------------------ |
+| Markdown          | Remark | [https://remark.js.org/][5]                |
 | CLJ/CLJC/CLJS/EDN | cljfmt | [https://github.com/weavejester/cljfmt][6] |
 
 [1]: https://github.com/reagent-project/reagent
@@ -73,3 +73,11 @@ These tools should be automatically applied before each commit through the use o
 [6]: https://github.com/weavejester/cljfmt
 
 [7]: http://shadow-cljs.org/
+
+[8]: #overview
+
+[9]: #getting-started
+
+[10]: #example
+
+[11]: #code-quality
