@@ -18,7 +18,7 @@
     (doseq [arg arglist]
       (let [{:keys [tag]} (meta arg)]
         (println "\t\t" (left-pad arg longest)
-          ": " (or tag "<undocumented>"))))))
+                 ": " (or tag "<undocumented>"))))))
 
 (defn- print-doc
   [var]
@@ -70,8 +70,8 @@
   []
   (println "Testing...")
   (chain
-    #(exec "npx shadow-cljs compile test")
-    #(exec "npx karma start --single-run")))
+   #(exec "npx shadow-cljs compile test")
+   #(exec "npx karma start --single-run")))
 
 (defn lint
   "Runs various linters over the project files"
@@ -87,7 +87,7 @@
   (println "Formatting...")
   (do-all
     #(exec "lein cljfmt fix")
-    #(exec "npx remark . --use toc --use bookmarks --use remark-preset-lint-recommended -o")))
+    #(exec "npx remark . --use toc --use bookmarks --use remark-preset-lint-recommended --use remark-reference-links -o")))
 
 (defn help
   "Prints the application usage"
