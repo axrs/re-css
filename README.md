@@ -30,11 +30,9 @@ component has been removed).
 
 ## Getting Started
 
-TODO:
+**re-css** is currently not ready for production use and may be considered experimental at this stage.
 
--   Add Karma Unit Tests for `defui` and JSS wrapper
--   Setup CI integration
--   Clojar deployment
+> TODO: Update Getting started once tests are complete and reploying to Clojars
 
 ### Example
 
