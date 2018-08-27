@@ -87,7 +87,7 @@
   (println "Formatting...")
   (do-all
     #(exec "lein cljfmt fix")
-    #(exec "npx remark . --use toc --use bookmarks --use remark-preset-lint-recommended --use remark-reference-links -o")))
+    #(exec "npx remark . --use remark-preset-lint-recommended --use remark-reference-links --use toc --use bookmarks -o")))
 
 (defn help
   "Prints the application usage"
