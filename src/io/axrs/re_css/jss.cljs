@@ -5,45 +5,59 @@
    ["jss-vendor-prefixer" :default vendor-prefixer]
    [clojure.string :as string]))
 
+(defonce ^:private sheets (atom {}))
+(defonce inst (delay
+               (doto
+                 (jss/create #js {:insertionPoint "jss-insertion-point"})
+                 (.use
+                   (nested)
+                   (vendor-prefixer)))))
+
+(defonce ^:private hash-key :io.axrs.re-css.core/styled)
+
 (defn styled
-  ([{css :io.axrs.re-css.core/styled :as attrs} classes]
+  ([{css hash-key :as attrs} classes]
    (if css
      (css attrs classes)
      attrs))
 
-  ([jss-classes {:keys [class] :as attrs} classes]
-   (let [classes (->> classes
-                      (map (partial aget jss-classes))
-                      (string/join " "))]
-     (-> attrs
-         (assoc :class (str classes " " class))
-         (dissoc :io.axrs.re-css.core/styled)))))
+  ([jss-hash {:keys [class] :as attrs} classes]
+   (if (map? jss-hash)
+     ((hash-key jss-hash) attrs classes)
+     (let [sheet (get-in @sheets [jss-hash :sheet])
+           class-names (->> classes
+                            (map (partial aget sheet "classes"))
+                            (string/join " "))]
+       (-> attrs
+           (assoc :class (str class-names " " class))
+           (dissoc :io.axrs.re-css.core/styled))))))
 
-(defonce ^:private sheets (atom {}))
-(defonce inst (delay
-               (doto (jss/create #js {:insertionPoint "jss-insertion-point"})
-                     (.use
-                       (nested)
-                       (vendor-prefixer)))))
-
-(defn attach [style]
+(defn load
+  "Loads a style sheet in preparation for DOM attachment"
+  [style]
   (let [hash (hash style)
-        [existing] (get @sheets hash)]
-    (if existing
+        existing (get @sheets hash)]
+    (when-not existing
+      (swap! sheets assoc hash {:style style}))
+    hash))
+
+(defn attach [hash]
+  (let [cache @sheets]
+    (if (get-in cache [hash :count])
       (do
-        (swap! sheets update-in [hash 1] inc)
-        [hash existing])
-      (let [style (->> style
+        (swap! sheets update-in [hash :count] inc)
+        (get-in cache [hash :sheet]))
+      (let [sheet (->> (get-in cache [hash :style])
                        clj->js
                        (.createStyleSheet @inst)
                        (.attach))]
-        (swap! sheets assoc hash [style 1])
-        [hash style]))))
+        (swap! sheets update-in [hash] assoc :count 1 :sheet sheet)
+        sheet))))
 
 (defn detach [hash]
-  (let [[style count] (get @sheets hash)]
+  (let [{:keys [sheet count]} (get @sheets hash)]
     (if (= 1 count)
       (do
-        (.detach style)
-        (swap! sheets dissoc hash))
-      (swap! sheets update-in [hash 1] dec))))
+        (.detach ^js sheet)
+        (swap! sheets update-in [hash] dissoc :sheet :count))
+      (swap! sheets update-in [hash :count] dec))))

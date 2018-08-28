@@ -8,29 +8,44 @@
 
 #?(:cljs (def styled jss/styled))
 
-(defmacro defui [name style args render-fn]
-  (let [form (cond
-               (symbol? render-fn) :form-0
-               (vector? render-fn) :form-1
-               (list? render-fn) :form-2
-               (map? render-fn) :form-3)
-        props (when (= :form-3 form) render-fn)]
-    `(defn ~name ~args
-       (let [[~'hash ~'sheet] (io.axrs.re-css.jss/attach ~style)
-             ~'classes (.-classes ^js ~'sheet)
-             ~'styled (partial io.axrs.re-css.jss/styled ~'classes)]
-         (reagent.core/create-class
-          (assoc ~props
-                 :component-will-unmount
-                 (case ~form
-                   :form-3 (fn [this#]
-                             (io.axrs.re-css.jss/detach ~'hash)
-                             (some-> ~props :component-will-unmount (apply [this#])))
-                   (fn [this#] (io.axrs.re-css.jss/detach ~'hash)))
+(defmacro defui
+  ([name style render-fn]
+   `(let [~'hash (io.axrs.re-css.jss/load ~style)
+          ~'styled (partial io.axrs.re-css.jss/styled ~'hash)
+          ~'form3? (map? ~render-fn)
+          ~'render (if ~'form3? (:reagent-render ~render-fn) ~render-fn)]
+      (def ~name
+        (reagent.core/create-class
+         (assoc (when ~'form3? ~render-fn)
+                :component-will-unmount
+                (fn [this#]
+                  (io.axrs.re-css.jss/detach ~'hash)
+                  (some-> ~render-fn :component-will-unmount (apply [this#])))
 
-                 :reagent-render
-                 (case ~form
-                   :form-0 (fn ~args (apply ~render-fn (update-in ~args [0] assoc ::styled ~'styled)))
-                   :form-1 (fn ~args ~render-fn)
-                   :form-2 ~render-fn
-                   :form-3 (fn ~args (apply (:reagent-render ~props) (update-in ~args [0] assoc ::styled ~'styled))))))))))
+                :component-will-mount
+                (fn [this#]
+                  (io.axrs.re-css.jss/attach ~'hash)
+                  (some-> ~render-fn :component-will-mount (apply [this#])))
+
+                :reagent-render
+                (fn [& ~'args]
+                  (apply ~'render (update-in (vec ~'args) [0] assoc ::styled ~'styled))))))))
+
+  ([name style args render-fn]
+   (let [form (cond
+                (vector? render-fn) :form-1
+                (list? render-fn) :form-2)]
+     `(defn ~name ~args
+        (let [~'hash (io.axrs.re-css.jss/load ~style)
+              ~'styled (partial io.axrs.re-css.jss/styled ~'hash)]
+          (reagent.core/create-class
+           {:component-will-unmount
+            (fn [this#] (io.axrs.re-css.jss/detach ~'hash))
+            :component-will-mount
+            (fn [this#]
+              (io.axrs.re-css.jss/attach ~'hash))
+
+            :reagent-render
+            (case ~form
+              :form-1 (fn ~args ~render-fn)
+              :form-2 ~render-fn)}))))))
