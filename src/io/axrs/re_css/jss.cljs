@@ -2,7 +2,22 @@
   (:require
    ["jss" :as jss]
    ["jss-nested" :default nested]
-   ["jss-vendor-prefixer" :default vendor-prefixer]))
+   ["jss-vendor-prefixer" :default vendor-prefixer]
+   [clojure.string :as string]))
+
+(defn styled
+  ([{css :io.axrs.re-css.core/styled :as attrs} classes]
+   (if css
+     (css attrs classes)
+     attrs))
+
+  ([jss-classes {:keys [class] :as attrs} classes]
+   (let [classes (->> classes
+                      (map (partial aget jss-classes))
+                      (string/join " "))]
+     (-> attrs
+         (assoc :class (str classes " " class))
+         (dissoc :styled)))))
 
 (defonce ^:private sheets (atom {}))
 (defonce inst (delay

@@ -4,7 +4,9 @@
   #?(:cljs
      (:require
       [reagent.core]
-      [io.axrs.re-css.jss])))
+      [io.axrs.re-css.jss :as jss])))
+
+#?(:cljs (def styled jss/styled))
 
 (defmacro defui [name style args render-fn]
   (let [form (cond
@@ -16,28 +18,19 @@
     `(defn ~name ~args
        (let [[~'hash ~'sheet] (io.axrs.re-css.jss/attach ~style)
              ~'classes (.-classes ^js ~'sheet)
-             ~'css #(hash-map :className (aget ~'classes %))]
+             ~'styled (partial io.axrs.re-css.jss/styled ~'classes)]
          (reagent.core/create-class
-          (merge ~props
-                 {:component-will-unmount (case ~form
-                                            :form-3
-                                            (fn [this#]
-                                              (io.axrs.re-css.jss/detach ~'hash)
-                                              (some-> ~props :component-will-unmount (apply [this#])))
+          (assoc ~props
+                 :component-will-unmount
+                 (case ~form
+                   :form-3 (fn [this#]
+                             (io.axrs.re-css.jss/detach ~'hash)
+                             (some-> ~props :component-will-unmount (apply [this#])))
+                   (fn [this#] (io.axrs.re-css.jss/detach ~'hash)))
 
-                                            (fn [this#]
-                                              (io.axrs.re-css.jss/detach ~'hash)))
-                  :reagent-render         (case ~form
-                                            :form-0
-                                            (fn ~args
-                                              (apply ~render-fn (update-in ~args [0] assoc :css ~'css)))
-
-                                            :form-1
-                                            (fn ~args
-                                              ~render-fn)
-
-                                            :form-2 ~render-fn
-
-                                            :form-3
-                                            (fn ~args
-                                              (apply (:reagent-render ~props) (update-in ~args [0] assoc :css ~'css))))}))))))
+                 :reagent-render
+                 (case ~form
+                   :form-0 (fn ~args (apply ~render-fn (update-in ~args [0] assoc ::styled ~'styled)))
+                   :form-1 (fn ~args ~render-fn)
+                   :form-2 ~render-fn
+                   :form-3 (fn ~args (apply (:reagent-render ~props) (update-in ~args [0] assoc ::styled ~'styled))))))))))

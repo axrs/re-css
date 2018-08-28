@@ -1,7 +1,7 @@
 (ns io.axrs.re-css.example.core
   (:refer-clojure :exclude [count])
   (:require
-    [io.axrs.re-css.core :refer [defui]]
+    [io.axrs.re-css.core :refer [defui styled]]
     [reagent.core :as r :refer-macros [with-let]]))
 
 (def ^:private count (r/atom (rand-int 5)))
@@ -40,8 +40,8 @@
 
 (defn render-button
   "A basic reagent button component"
-  [{:keys [css] :as attrs} text]
-  [:button (merge attrs (when css (css "button")))
+  [attrs text]
+  [:button (styled attrs ["button"])
    text " | count " @count])
 
 ; A styled reagent button component using the basic component
@@ -50,14 +50,14 @@
 
 ; Another styled reagent button component mirroring a Form 1
 (defui form-1 blue-button-style [attrs text]
-  [:button (merge attrs (css "button"))
+  [:button (styled attrs ["button"])
    text " | count " @count])
 
 ; Another styled reagent button component mirroring a Form 2 (state capturing)
 (defui form-2 black-button-style [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (merge attrs (css "button"))
+      [:button (styled attrs ["button"])
        text " | count " @count
        " (initial was " initial-count ")"])))
 
@@ -66,12 +66,12 @@
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (merge attrs (css "button"))
+                             [:button (styled attrs ["button"])
                               text " | count " @count])})
 
 
 (defui code code-style [attrs data]
-  [:pre (merge attrs (css "code"))
+  [:pre (styled attrs ["code"])
    data])
 
 ;; VIEWS  ----------------------------------------------------------------------------------
