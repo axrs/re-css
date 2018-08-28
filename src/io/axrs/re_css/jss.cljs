@@ -17,7 +17,7 @@
                       (string/join " "))]
      (-> attrs
          (assoc :class (str classes " " class))
-         (dissoc :styled)))))
+         (dissoc :io.axrs.re-css.core/styled)))))
 
 (defonce ^:private sheets (atom {}))
 (defonce inst (delay
