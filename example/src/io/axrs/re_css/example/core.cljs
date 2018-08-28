@@ -37,7 +37,7 @@
           :padding          "15px"
           :border-left      "3px solid #7b7b7b"}})
 
-;; REAGENT Form 1  ----------------------------------------------------------------------------------
+;; Form 1  ----------------------------------------------------------------------------------
 
 (defn render-button
   "A basic reagent button component"
@@ -51,7 +51,7 @@
   [:button (styled attrs ["button"])
    text " | count " @count])
 
-;; REAGENT Form 2  ----------------------------------------------------------------------------------
+;; Form 2  ----------------------------------------------------------------------------------
 
 (defn form-2-symbol-def
   "A basic form-2 reagent button component"
@@ -71,7 +71,7 @@
        text " | count " @count
        " (initial was " initial-count ")"])))
 
-;; REAGENT Form 3  ----------------------------------------------------------------------------------
+;; Form 3  ----------------------------------------------------------------------------------
 
 (def form-3-symbol-def
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))

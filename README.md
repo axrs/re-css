@@ -33,73 +33,90 @@ component has been removed).
 
 **re-css** is currently not ready for production use and may be considered experimental at this stage.
 
-> TODO: Update Getting started once tests are complete and reploying to Clojars
+> TODO: Update Getting started once tests are complete and deploying to Clojars
 
 ### Example
 
 ```clojure
 (ns io.axrs.re-css.example.core
   (:require
-    [io.axrs.re-css.core :refer [defui]]
-    [reagent.core :as r]))
+    [io.axrs.re-css.core :refer [defui styled]]))
 
-; A basic component style map showing CSS properties which will eventually be attached
-; to an inline stylesheet as a generated `button-x-x-x` class
+;; CSS styles defined as EDN  ---------------------------------------------------------------
+
 (def ^:private button-style
   {:button {:background-color "#4CAF50"
             :border           "none"
             :color            "white"
-            :display          "inline-block"
+            :display          "block"
             :font-size        "16px"
             :padding          "15px 32px"
             :text-align       "center"
             :text-decoration  "none"}})
 
-(defn render-button
-  "A basic reagent button component"
-  [{:keys [css] :as attrs} text]
-  [:button (merge attrs (when css (css "button")))
+(def ^:private blue-button-style
+  (assoc-in button-style [:button :background-color] "#008CBA"))
+
+;; Form 1  ----------------------------------------------------------------------------------
+
+(defn render-button [attrs text]
+  [:button (styled attrs ["button"])
    text " | count " @count])
 
-; A styled reagent button component using the basic component
-; (Note: Form-0 is not really a thing. It's really a just a symbol)
-(defui form-0 button-style [attrs text] render-button)
+(defui form-1-symbol blue-button-style render-button)
 
-; Another styled reagent button component mirroring a Form 1
-(defui form-1 button-style [attrs text]
-  [:button (merge attrs (css "button"))
+(defui form-1 blue-button-style [attrs text]
+  [:button (styled attrs ["button"])
    text " | count " @count])
 
-; Another styled reagent button component mirroring a Form 2 (state capturing)
-(defui form-2 button-style [attrs text]
+;; Form 2  ----------------------------------------------------------------------------------
+
+(defn form-2-symbol-def [initial-attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (merge attrs (css "button"))
+      [:button (styled initial-attrs attrs ["button"])
        text " | count " @count
        " (initial was " initial-count ")"])))
 
-; Another styled reagent button component mirroring a Form 3 (lifecycle capturing)
-(defui form-3 button-style [attrs text]
+(defui form-2-symbol button-style form-2-symbol-def)
+
+(defui form-2 button-style [attrs text]
+  (let [initial-count @count]
+    (fn [attrs text]
+      [:button (styled attrs ["button"])
+       text " | count " @count
+       " (initial was " initial-count ")"])))
+
+;; Form 3  ----------------------------------------------------------------------------------
+
+(def form-3-symbol-def
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (merge attrs (css "button"))
+                             [:button (styled attrs ["button"])
                               text " | count " @count])})
 
-(defn view
-  "A simple Reagent app view to track the number of button clicks"
-  []
-  (let [inc-counter #(swap! count inc)]
-    [:div
-     [render-button {:on-click inc-counter} "Default"]
-     [form-0 {:on-click inc-counter} "Form 0"]
-     [form-1 {:on-click inc-counter} "Form 1"]
-     [form-2 {:on-click inc-counter} "Form 2"]
-     (when (zero? (mod @count 5))
-       [form-3 {:on-click inc-counter} "Form 3"])))
+(defui form-3-symbol button-style form-3-symbol-def)
+
+(defui form-3 button-style
+  {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
+   :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
+   :reagent-render         (fn [attrs text]
+                             [:button (styled attrs ["button"])
+                              text " | count " @count])})
+
+(defn view []
+  [:<>
+   [render-button {:on-click #(swap! show? not)} "Toggle Buttons"]
+   [form-1-symbol {:on-click inc-counter} "Form 1 Symbol"]
+   [form-1 {:on-click inc-counter} "Form 1"]
+   [form-2-symbol {:on-click inc-counter} "Form 2 Symbol"]
+   [form-2 {:on-click inc-counter} "Form 2"]
+   [form-3 {:on-click inc-counter} "Form 3"])
+   [form-3-symbol {:on-click inc-counter} "Form 3 Symbol"])])
 ```
 
-[View Source][4]
+[View Full Example][4]
 
 > You can run the example project using [Shadow-CLJS][7] by
 
