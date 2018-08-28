@@ -118,7 +118,7 @@ component has been removed).
 
 [View Full Example][4]
 
-> You can run the example project using [Shadow-CLJS][7] by
+> Running the example using [Shadow-CLJS][7]:
 
 ```bash
 git clone git@github.com:axrs/re-css.git
