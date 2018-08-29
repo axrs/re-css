@@ -23,13 +23,12 @@
 (def other-css (str ".other-" other-hash "{padding: 0;}"))
 (def multi-css (str ".multi-" multi-hash "{position: \"absolute\";padding: 0;}"))
 (def nested-button-name (str ".button-" nested-hash))
-(def nested-css (str
-                 nested-button-name "{background-color: \"red\";}" \newline
-                 nested-button-name ".loading{color: \"white\";}" \newline
-                 nested-button-name " > .action{display: \"none\";}" \newline
-                 nested-button-name " > div{margin: \"10px\";}" \newline
-                 nested-button-name " span{padding: \"10px\";}" \newline
-                 nested-button-name " .normal{font-size: \"12px\";}"))
+(def nested-css (str nested-button-name "{background-color: \"red\";}" \newline
+                     nested-button-name ".loading{color: \"white\";}" \newline
+                     nested-button-name " > .action{display: \"none\";}" \newline
+                     nested-button-name " > div{margin: \"10px\";}" \newline
+                     nested-button-name " span{padding: \"10px\";}" \newline
+                     nested-button-name " .normal{font-size: \"12px\";}"))
 
 (deftest css-test
   (testing "simple css classes"
