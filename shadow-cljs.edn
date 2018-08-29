@@ -1,5 +1,15 @@
 {:builds
-       {:test {:closure-defines {goog.DEBUG false}
-               :output-to       "target/karma/test.js"
-               :target          :karma}}
+       {:test         {:closure-defines {goog.DEBUG false}
+                       :output-to       "target/karma/test.js"
+                       :ns-regexp       "-test$"
+                       :target          :karma}
+        :test-browser {:target          :browser-test
+                       :test-dir        "target/browser/"
+                       :ns-regexp       "-test$"
+                       :closure-defines {goog.DEBUG false}
+                       :ignore-warnings true
+                       :runner-ns       io.axrs.re-css.test.runner
+                       :devtools        {:http-port 8091
+                                         :hud       false
+                                         :http-root "target/browser/"}}}
  :lein true}
