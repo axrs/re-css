@@ -1,6 +1,6 @@
 # re-css
 
-JSS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
+CSS-in-JS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
 
 ## Table of Contents
 
@@ -17,9 +17,9 @@ JSS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
 **re-css** provides a simplistic macro to independently style reagent components (Form-1, Form-2, and Form-3) in [re-frame][2]
 or [reagent][1] applications. Ultimately removing the pains of cascading styles, name collisions and code/style separation.
 
-**re-css** leverages [JSS][3] to inject individual inline stylesheets (defined with the component as EDN structures) into
-the HEAD of the document JUST before the component is mounted (and removes the relevant styles once the
-component has been removed).
+**re-css** injects individual inline stylesheets (defined adjacent to the component as EDN structures) into
+the HEAD of the document JUST before the component is mounted; and subsequently removes the styles once the
+component has been removed.
 
 **re-css** aims to:
 
@@ -141,8 +141,6 @@ These tools should be automatically applied before each commit through the use o
 [1]: https://github.com/reagent-project/reagent
 
 [2]: https://github.com/Day8/re-frame
-
-[3]: https://github.com/cssinjs/jss
 
 [4]: example/src/io/axrs/re_css/example/core.cljs
 
