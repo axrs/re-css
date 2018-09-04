@@ -2,11 +2,12 @@
   (:refer-clojure :exclude [count])
   (:require
     [io.axrs.re-css.core :refer [defui styled]]
-    [reagent.core :as r :refer-macros [with-let]]))
+    [reagent.core :as r :refer-macros [with-let]]
+    [clojure.string :as string]))
 
 (def ^:private show? (r/atom false))
 (def ^:private count (r/atom (rand-int 5)))
-(def ^:private jss-updated (r/atom nil))
+(def ^:private css-updated (r/atom nil))
 
 ;; CSS STYLES --------------------------------------------------------------------------------
 
@@ -42,13 +43,13 @@
 (defn render-button
   "A basic reagent button component"
   [attrs text]
-  [:button (styled attrs ["button"])
+  [:button (styled attrs [:button])
    text " | count " @count])
 
 (defui form-1-symbol blue-button-style render-button)
 
 (defui form-1 blue-button-style [attrs text]
-  [:button (styled attrs ["button"])
+  [:button (styled attrs [:button])
    text " | count " @count])
 
 ;; Form 2  ----------------------------------------------------------------------------------
@@ -58,7 +59,7 @@
   [initial-attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled initial-attrs attrs ["button"])
+      [:button (styled initial-attrs attrs [:button])
        text " | count " @count
        " (initial was " initial-count ")"])))
 
@@ -67,7 +68,7 @@
 (defui form-2 black-button-style [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled attrs ["button"])
+      [:button (styled attrs [:button])
        text " | count " @count
        " (initial was " initial-count ")"])))
 
@@ -77,7 +78,7 @@
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs ["button"])
+                             [:button (styled attrs [:button])
                               text " | count " @count])})
 
 (defui form-3-symbol red-button-style form-3-symbol-def)
@@ -86,24 +87,26 @@
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs ["button"])
+                             [:button (styled attrs [:button])
                               text " | count " @count])})
 
 ;; VIEWS  ----------------------------------------------------------------------------------
 
 (defui code code-style [attrs data]
-  [:pre (styled attrs ["code"])
+  [:pre (styled attrs [:code])
    data])
 
 (defn- show-styles
   "Fetches the latest inline stylesheets from the document head and outputs their data into a pre block"
   []
   (let [styles (js/document.getElementsByTagName "style")]
-    @jss-updated
+    @css-updated
     [code {}
      [:<>
       "// ATTACHED Inline Stylesheets"
-      (map #(aget % "firstChild" "data") (array-seq styles))]]))
+      \newline
+      (string/join \newline
+        (map #(aget % "firstChild" "data") (array-seq styles)))]]))
 
 (defn view
   "A simple Reagent app view to track the number of button clicks"
@@ -131,8 +134,8 @@
   ; Note: Do NOT watch the sheets storage in production.
   ; It is only included here for debugging purposes to update what styles
   ; have been appended to the HEAD of the page
-  (add-watch io.axrs.re-css.jss/sheets :jss-debug
-    (fn [& _] (reset! jss-updated (js/Date.now))))
+  (add-watch io.axrs.re-css.dom/attached :css-debug
+    (fn [& _] (reset! css-updated (js/Date.now))))
   (r/render [view]
     (js/document.getElementById "example")))
 

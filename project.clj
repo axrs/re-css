@@ -8,7 +8,8 @@
                  [org.clojure/clojurescript
                   "1.10.238"
                   :exclusions
-                  [com.google.javascript/closure-compiler-unshaded]]]
+                  [com.google.javascript/closure-compiler-unshaded]]
+                 [reagent "0.8.1"]]
   :plugins [[lein-cljfmt "0.6.0"]]
   :cljfmt {:indents {do-all   [[:inner 0]]
                      doto     [[:block 0]]

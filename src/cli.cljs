@@ -67,11 +67,13 @@
 
 (defn unit-test
   "Runs unit tests"
-  []
+  [& args]
   (println "Testing...")
-  (chain
-   #(exec "npx shadow-cljs compile test")
-   #(exec "npx karma start --single-run")))
+  (if (some #{"-r"} args)
+    (exec "npx shadow-cljs watch test-browser")
+    (chain
+     #(exec "npx shadow-cljs compile test")
+     #(exec "npx karma start --single-run"))))
 
 (defn lint
   "Runs various linters over the project files"
