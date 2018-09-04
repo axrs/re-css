@@ -32,22 +32,24 @@
 
 (defn- ->nested [root separator [child attrs]]
   (when child
-    (->css [(str root separator (name child)) attrs])))
+    (get-in (->css [(str root separator (name child)) attrs]) [1 1])))
 
 (defn- ->css
   [[class style]]
   (let [{:keys [nested-class nested-node compound direct attrs]} (group-by class-type style)
         root (css-identifier class style)]
-    (string/join \newline
-                 (remove nil?
-                         (concat
-                          [(str root "{" (apply str (map ->attr attrs)) "}")]
-                          (map (partial ->nested root "") compound)
-                          (map (partial ->nested root " > ") direct)
-                          (map (partial ->nested root " ") nested-class)
-                          (map (partial ->nested root " ") nested-node))))))
+    (let [css (string/join
+               \newline
+               (remove nil?
+                       (concat
+                        [(str root "{" (apply str (map ->attr attrs)) "}")]
+                        (map (partial ->nested root "") compound)
+                        (map (partial ->nested root " > ") direct)
+                        (map (partial ->nested root " ") nested-class)
+                        (map (partial ->nested root " ") nested-node))))]
+      [class [root css]])))
 
 (defn css [style-m]
   (->> style-m
        (map ->css)
-       (string/join \newline)))
+       (reduce (fn [r [k v]] (assoc r k v)) {})))
