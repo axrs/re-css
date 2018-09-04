@@ -3,7 +3,6 @@
   (:require
     [io.axrs.re-css.core :refer [defui styled]]
     [reagent.core :as r :refer-macros [with-let]]
-    [clojure.string :as string]
     [clojure.string :as string]))
 
 (def ^:private show? (r/atom false))

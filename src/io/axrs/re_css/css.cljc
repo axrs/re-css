@@ -21,6 +21,7 @@
     (and (nil? (namespace k)) (map? v)) :nested-node
     (= "&" (namespace k)) :compound
     (= ">" (namespace k)) :direct
+    (namespace k) :pseudo
     (keyword? k) :attrs))
 
 (def comp-class (comp (partial = "&") namespace))
@@ -31,17 +32,18 @@
 
 (defn- ->nested [root separator [child attrs]]
   (when child
-    (get-in (->css [(str "." root separator (name child)) attrs]) [1 1])))
+    (get-in (->css [(str root separator (name child)) attrs]) [1 1])))
 
 (defn- ->css
   [[class style]]
-  (let [{:keys [nested-class nested-node compound direct attrs]} (group-by class-type style)
+  (let [{:keys [nested-class pseudo nested-node compound direct attrs]} (group-by class-type style)
         root (css-identifier class style)]
     (let [css (string/join
                \newline
                (remove nil?
                        (concat
                         [(str "." root "{" (apply str (map ->attr attrs)) "}")]
+                        (map (partial ->nested root "::") pseudo)
                         (map (partial ->nested root "") compound)
                         (map (partial ->nested root " > ") direct)
                         (map (partial ->nested root " ") nested-class)
