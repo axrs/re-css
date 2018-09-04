@@ -17,6 +17,7 @@
                 (assoc-in [:button :.normal] {:font-size "12px"})
                 (assoc-in [:button :>/.action] {:display "none"})
                 (assoc-in [:button :>/div] {:margin "10px"})
+                (assoc-in [:button :+/button] {:background "none"})
                 (assoc-in [:button ::before] {:position "absolute"})))
 (def nested-hash (str "button-" (hash (:button nested))))
 (def nested-class (str "." nested-hash))
@@ -27,6 +28,7 @@
 (def nested-css (str nested-class "{background-color: red;}" \newline
                      nested-class "::before{position: absolute;}" \newline
                      nested-class ".loading{color: white;}" \newline
+                     nested-class " + button{background: none;}" \newline
                      nested-class " > .action{display: none;}" \newline
                      nested-class " > div{margin: 10px;}" \newline
                      nested-class " span{padding: 10px;}" \newline

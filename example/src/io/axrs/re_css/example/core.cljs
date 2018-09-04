@@ -134,7 +134,7 @@
   ; Note: Do NOT watch the sheets storage in production.
   ; It is only included here for debugging purposes to update what styles
   ; have been appended to the HEAD of the page
-  (add-watch io.axrs.re-css.css/attached :css-debug
+  (add-watch io.axrs.re-css.dom/attached :css-debug
     (fn [& _] (reset! css-updated (js/Date.now))))
   (r/render [view]
     (js/document.getElementById "example")))
