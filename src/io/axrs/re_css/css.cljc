@@ -1,4 +1,5 @@
 (ns io.axrs.re-css.css
+  (:refer-clojure :exclude [class > + & next])
   (:require
    [clojure.walk :refer [postwalk]]
    [clojure.string :as string]))
@@ -16,14 +17,8 @@
        ";"))
 
 (defn class-type [[k v :as kv]]
-  (cond
-    (string? k) :nested-class
-    (and (nil? (namespace k)) (map? v)) :nested-node
-    (= "&" (namespace k)) :compound
-    (= ">" (namespace k)) :direct
-    (= "+" (namespace k)) :sibling
-    (namespace k) :pseudo
-    (keyword? k) :attrs))
+  (or (some-> k namespace keyword)
+      :attrs))
 
 (def comp-class (comp (partial = "&") namespace))
 (def sub-class (comp (partial = ">") namespace))
@@ -37,7 +32,7 @@
 
 (defn- ->css
   [[class style]]
-  (let [{:keys [nested-class pseudo nested-node compound direct attrs sibling]} (group-by class-type style)
+  (let [{:keys [descendant pseudo next compound child attrs adjacent]} (group-by class-type style)
         root (css-identifier class style)]
     (let [css (string/join
                \newline
@@ -46,13 +41,50 @@
                         [(str "." root "{" (apply str (map ->attr attrs)) "}")]
                         (map (partial ->nested root "::") pseudo)
                         (map (partial ->nested root "") compound)
-                        (map (partial ->nested root " + ") sibling)
-                        (map (partial ->nested root " > ") direct)
-                        (map (partial ->nested root " ") nested-class)
-                        (map (partial ->nested root " ") nested-node))))]
+                        (map (partial ->nested root " ~ ") next)
+                        (map (partial ->nested root " + ") adjacent)
+                        (map (partial ->nested root " > ") child)
+                        (map (partial ->nested root " ") descendant))))]
       [class [root css]])))
 
 (defn css [style-m]
   (->> style-m
        (map ->css)
        (reduce (fn [r [k v]] (assoc r k v)) {})))
+
+(def ^:dynamic *parent* nil)
+
+(defn class [& [m k v :as classes-and-attrs]]
+  (let [base? (map? m)]
+    (->> classes-and-attrs
+         ((if base? rest identity))
+         (apply hash-map)
+         (into (if base? m (sorted-map))))))
+
+(defn nest [n k m]
+  (fn [c p]
+    (assoc-in c [p (keyword n (name k))] m)))
+
+(def pseudo (partial nest "pseudo"))
+(def decendent (partial nest "descendant"))
+(def nested decendent)
+(def child (partial nest "child"))
+(def > (partial nest "child"))
+(def adjacent (partial nest "adjacent"))
+(def + adjacent)
+(def next (partial nest "next"))
+(def compound (partial nest "compound"))
+(def & compound)
+
+(defn with [m v & fns]
+  (reduce #(%2 %1 v) m fns))
+
+(-> (class :button {:background "red"})
+    (with :button
+          (pseudo ::before {:display "block"})
+          (nested :.after {:display "hidden"})
+          (nested :span {:display "inline"}))
+    clojure.pprint/pprint)
+
+(defn hash-of [m c]
+  (str (name c) "-" (hash (c m))))

@@ -1,58 +1,63 @@
 (ns io.axrs.re-css.css-test
   (:require
+   [clojure.string :as string]
    [clojure.test :refer [deftest testing is]]
-   [io.axrs.re-css.css :refer [css]]))
+   [io.axrs.re-css.css :as css]))
 
-(def button {:button {:background-color "red"}})
-(def button-hash (str "button-" (hash (:button button))))
-(def other {:other {:padding 0}})
-(def other-hash (str "other-" (hash (:other other))))
-(def multi {:multi {:position "absolute"
-                    :padding  0}})
-(def multi-hash (str "multi-" (hash (:multi multi))))
+(def button (-> (css/class :button {:display          "block"
+                                    :background-color "red"})))
+(def button-hash (css/hash-of button :button))
 
 (def nested (-> button
-                (assoc-in [:button :&/.loading] {:color "white"})
-                (assoc-in [:button :span] {:padding "10px"})
-                (assoc-in [:button :.normal] {:font-size "12px"})
-                (assoc-in [:button :>/.action] {:display "none"})
-                (assoc-in [:button :>/div] {:margin "10px"})
-                (assoc-in [:button :+/button] {:background "none"})
-                (assoc-in [:button ::before] {:position "absolute"})))
-(def nested-hash (str "button-" (hash (:button nested))))
-(def nested-class (str "." nested-hash))
+                (css/class :hero {:width "100%"})
+                (css/with :button
+                          (css/& :.loading {:color "white"})
+                          (css/nested :span {:padding "10px"})
+                          (css/nested :.normal {:font-size "12px"})
+                          (css/> :.action {:display "none"})
+                          (css/> :div {:margin "10px"})
+                          (css/+ :button {:background "none"})
+                          (css/pseudo ::before {:position "absolute"})
+                          (css/next :label {:line-height "20px"}))
+                (css/with :hero
+                          (css/& :.fade {:opacity 0.5}))))
 
-(def button-css (str "." button-hash "{background-color: red;}"))
-(def other-css (str "." other-hash "{padding: 0;}"))
-(def multi-css (str "." multi-hash "{position: absolute;padding: 0;}"))
-(def nested-css (str nested-class "{background-color: red;}" \newline
-                     nested-class "::before{position: absolute;}" \newline
-                     nested-class ".loading{color: white;}" \newline
-                     nested-class " + button{background: none;}" \newline
-                     nested-class " > .action{display: none;}" \newline
-                     nested-class " > div{margin: 10px;}" \newline
-                     nested-class " span{padding: 10px;}" \newline
-                     nested-class " .normal{font-size: 12px;}"))
+(def nested-button-hash (css/hash-of nested :button))
+(def nested-button-class (str "." nested-button-hash))
+(def nested-hero-hash (css/hash-of nested :hero))
+(def nested-hero-class (str "." nested-hero-hash))
+
+(def button-css (str "." button-hash "{display: block;background-color: red;}"))
+(def nested-button-css #{(str nested-button-class "{background-color: red;display: block;}")
+                         (str nested-button-class "::before{position: absolute;}")
+                         (str nested-button-class ".loading{color: white;}")
+                         (str nested-button-class " ~ label{line-height: 20px;}")
+                         (str nested-button-class " + button{background: none;}")
+                         (str nested-button-class " > div{margin: 10px;}")
+                         (str nested-button-class " > .action{display: none;}")
+                         (str nested-button-class " .normal{font-size: 12px;}")
+                         (str nested-button-class " span{padding: 10px;}")})
+
+(def hero-css #{(str nested-hero-class "{width: 100%;}")
+                (str nested-hero-class ".fade{opacity: 0.5;}")})
 
 (def expected-button {:button [button-hash button-css]})
-(def expected-other {:other [other-hash other-css]})
-(def expected-multi {:multi [multi-hash multi-css]})
+
+(defn assert-css [style class class-hash class-css]
+  (let [actual (css/css style)
+        [hash css-str] (get actual class)]
+    (testing "css hash and classes"
+      (is (= class-hash hash))
+      (is (= class-css (set (string/split css-str #"\n")))))))
 
 (deftest css-test
-  (testing "simple css classes"
+  (testing "simple css attributes"
     (is (= {:button [button-hash button-css]}
-           (css button)))
-    (is (= {:other [other-hash other-css]}
-           (css other))))
-
-  (testing "multiple attributes"
-    (is (= {:multi [multi-hash multi-css]}
-           (css multi))))
-
-  (testing "multiple classes"
-    (is (= (merge expected-button expected-other expected-multi)
-           (css (merge button other multi)))))
+           (css/css button))))
 
   (testing "nested classes"
-    (is (= {:button [nested-hash nested-css]}
-           (css nested)))))
+    (testing "button"
+      (assert-css nested :button nested-button-hash nested-button-css)
+      (assert-css nested :hero nested-hero-hash hero-css))))
+
+(clojure.test/run-tests)
