@@ -79,12 +79,5 @@
 (defn with [m v & fns]
   (reduce #(%2 %1 v) m fns))
 
-(-> (class :button {:background "red"})
-    (with :button
-          (pseudo ::before {:display "block"})
-          (nested :.after {:display "hidden"})
-          (nested :span {:display "inline"}))
-    clojure.pprint/pprint)
-
 (defn hash-of [m c]
   (str (name c) "-" (hash (c m))))
