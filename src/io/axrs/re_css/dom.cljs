@@ -2,31 +2,32 @@
   (:require
    [clojure.string :as string]))
 
-(defonce ^:private attached (atom nil))
+(defonce ^:private attached (atom {}))
+(defonce ^:private document (delay js/document))
+(defonce ^:private document-head (delay (aget (js/document.getElementsByTagName "head") 0)))
 
-(def ^:private document-head (delay (aget (js/document.getElementsByTagName "head") 0)))
-
-(defn- append-style [[_ [identifier css-str]]]
+(defn- attach-style [[_ [identifier css-str]]]
   (if-let [exist (get @attached identifier)]
     (do
       (swap! attached update-in [identifier 1] inc)
       (first exist))
-    (let [head @document-head
-          style (js/document.createElement "style")]
-      (.appendChild style (js/document.createTextNode css-str))
-      (.appendChild head style)
+    (let [document @document
+          style (.createElement document "style")]
+      (.appendChild style (.createTextNode document css-str))
+      (.appendChild @document-head style)
       (swap! attached assoc identifier [style 1]))))
 
-(defn attach [styles]
-  (mapv append-style styles))
-
-(defn detach-style [[_ [identifier _]]]
+(defn- detach-style [[_ [identifier _]]]
   (let [[element count] (get @attached identifier)]
-    (if (= 1 count)
-      (do
-        (.remove ^js element)
-        (swap! attached dissoc identifier))
+    (case count
+      nil nil
+      1 (do
+          (.remove ^js element)
+          (swap! attached dissoc identifier))
       (swap! attached update-in [identifier 1] dec))))
+
+(defn attach [styles]
+  (mapv attach-style styles))
 
 (defn detach [styles]
   (mapv detach-style styles))

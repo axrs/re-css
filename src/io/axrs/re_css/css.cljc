@@ -5,11 +5,7 @@
    [clojure.string :as string]))
 
 (defn ->attr [[k v]]
-  (str (name k) ": "
-       (cond
-         (number? v) v
-         :else v)
-       ";"))
+  (str (name k) ": "  v \;))
 
 (defn class-type [[k v :as kv]]
   (or (some-> k namespace keyword)
