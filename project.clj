@@ -1,4 +1,4 @@
-(defproject io.axrs/re-css "0.0.1-SNAPSHOT"
+(defproject io.axrs/re-css "0.0.1"
   :min-lein-version "2.8.1"
   :source-paths ["src"]
   :test-paths ["test"]
