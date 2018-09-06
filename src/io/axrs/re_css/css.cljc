@@ -60,8 +60,8 @@
     (assoc-in c [p (keyword n (name k))] m)))
 
 (def pseudo (partial nest "pseudo"))
-(def descendent (partial nest "descendant"))
-(def nested descendent)
+(def descendant (partial nest "descendant"))
+(def nested descendant)
 (def child (partial nest "child"))
 (def > (partial nest "child"))
 (def adjacent (partial nest "adjacent"))
@@ -72,6 +72,3 @@
 
 (defn with [m v & fns]
   (reduce #(%2 %1 v) m fns))
-
-(defn hash-of [m c]
-  (str (name c) "-" (hash (c m))))
