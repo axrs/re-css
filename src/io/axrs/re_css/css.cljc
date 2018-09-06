@@ -27,7 +27,6 @@
   ([suffix [class style]]
    (let [{:keys [descendant pseudo next compound child attrs adjacent]} (group-by class-type style)
          root (if (string? class) class (str (name class) \- suffix))]
-     (prn root)
      (let [css (string/join
                 \newline
                 (remove nil?
