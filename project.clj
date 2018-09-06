@@ -17,4 +17,6 @@
                      :require [[:block 0]]
                      require  [[:block 0]]}}
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
-                                  [pjstadig/humane-test-output "0.8.3"]]}})
+                                  [pjstadig/humane-test-output "0.8.3"]]}}
+  :deploy-repositories [["releases" {:sign-releases false :url "https://clojars.org/repo"}]
+                        ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]])
