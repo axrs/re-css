@@ -66,8 +66,8 @@
     (assoc-in c [p (keyword n (name k))] m)))
 
 (def pseudo (partial nest "pseudo"))
-(def decendent (partial nest "descendant"))
-(def nested decendent)
+(def descendent (partial nest "descendant"))
+(def nested descendent)
 (def child (partial nest "child"))
 (def > (partial nest "child"))
 (def adjacent (partial nest "adjacent"))
