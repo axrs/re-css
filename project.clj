@@ -1,4 +1,7 @@
-(defproject io.axrs/re-css "0.0.1"
+(defproject io.axrs/re-css "0.0.1-SNAPSHOT"
+  :description "CSS-in-JS integration with reagent (for use in SPA frameworks like re-frame)"
+  :url "https://github.com/axrs/re-css.git"
+  :license {:name "MIT"}
   :min-lein-version "2.8.1"
   :source-paths ["src"]
   :test-paths ["test"]
