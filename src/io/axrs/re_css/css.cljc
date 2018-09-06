@@ -4,11 +4,6 @@
    [clojure.walk :refer [postwalk]]
    [clojure.string :as string]))
 
-(defn- css-identifier [prefix style]
-  (cond
-    (string? prefix) (str prefix)
-    (keyword? prefix) (str (name prefix) "-" (hash style))))
-
 (defn ->attr [[k v]]
   (str (name k) ": "
        (cond
@@ -20,10 +15,6 @@
   (or (some-> k namespace keyword)
       :attrs))
 
-(def comp-class (comp (partial = "&") namespace))
-(def sub-class (comp (partial = ">") namespace))
-(def child-class string?)
-
 (declare ->css)
 
 (defn- ->nested [root separator [child attrs]]
@@ -31,26 +22,30 @@
     (get-in (->css [(str root separator (name child)) attrs]) [1 1])))
 
 (defn- ->css
-  [[class style]]
-  (let [{:keys [descendant pseudo next compound child attrs adjacent]} (group-by class-type style)
-        root (css-identifier class style)]
-    (let [css (string/join
-               \newline
-               (remove nil?
-                       (concat
-                        [(str "." root "{" (apply str (map ->attr attrs)) "}")]
-                        (map (partial ->nested root "::") pseudo)
-                        (map (partial ->nested root "") compound)
-                        (map (partial ->nested root " ~ ") next)
-                        (map (partial ->nested root " + ") adjacent)
-                        (map (partial ->nested root " > ") child)
-                        (map (partial ->nested root " ") descendant))))]
-      [class [root css]])))
+  ([[class style]]
+   (->css nil [class style]))
+  ([suffix [class style]]
+   (let [{:keys [descendant pseudo next compound child attrs adjacent]} (group-by class-type style)
+         root (if (string? class) class (str (name class) \- suffix))]
+     (prn root)
+     (let [css (string/join
+                \newline
+                (remove nil?
+                        (concat
+                         [(str "." root "{" (apply str (map ->attr attrs)) "}")]
+                         (map (partial ->nested root "::") pseudo)
+                         (map (partial ->nested root "") compound)
+                         (map (partial ->nested root " ~ ") next)
+                         (map (partial ->nested root " + ") adjacent)
+                         (map (partial ->nested root " > ") child)
+                         (map (partial ->nested root " ") descendant))))]
+       [class [root css]]))))
 
-(defn css [style-m]
-  (->> style-m
-       (map ->css)
-       (reduce (fn [r [k v]] (assoc r k v)) {})))
+(defn css [suffix style-m]
+  (let [->css (partial ->css suffix)]
+    (->> style-m
+         (map ->css)
+         (reduce (fn [r [k v]] (assoc r k v)) {}))))
 
 (def ^:dynamic *parent* nil)
 

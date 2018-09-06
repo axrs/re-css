@@ -12,7 +12,8 @@
 
 (defmacro defui
   ([name style render-fn]
-   `(let [s# (io.axrs.re-css.css/css ~style)
+   `(let [suffix# (gensym "")
+          s# (io.axrs.re-css.css/css suffix# ~style)
           ~'styled (partial io.axrs.re-css.dom/styled s#)
           ~'form3? (map? ~render-fn)
           ~'render (if ~'form3? (:reagent-render ~render-fn) ~render-fn)]
@@ -38,7 +39,8 @@
                 (vector? render-fn) :form-1
                 (list? render-fn) :form-2)]
      `(defn ~name ~args
-        (let [s# (io.axrs.re-css.css/css ~style)
+        (let [suffix# (gensym "")
+              s# (io.axrs.re-css.css/css suffix# ~style)
               ~'styled (partial io.axrs.re-css.dom/styled s#)]
           (reagent.core/create-class
            {:component-will-unmount
