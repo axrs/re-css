@@ -68,6 +68,7 @@
 (defn unit-test
   "Runs unit tests"
   [& args]
+  (clean)
   (println "Testing...")
   (if (some #{"-r"} args)
     (exec "npx shadow-cljs watch test-browser")

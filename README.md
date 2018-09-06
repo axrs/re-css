@@ -2,6 +2,8 @@
 
 CSS-in-JS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
 
+[![Clojars Project][13]][3]
+
 ## Table of Contents
 
 -   [Overview](#overview)
@@ -159,3 +161,7 @@ These tools should be automatically applied before each commit through the use o
 [11]: #code-quality
 
 [12]: githooks/pre-commit
+
+[3]: https://clojars.org/io.axrs/re-css
+
+[13]: https://img.shields.io/clojars/v/io.axrs/re-css.svg
