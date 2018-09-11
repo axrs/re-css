@@ -13,13 +13,14 @@
                 (css/class :hero {:width "100%"})
                 (css/with :button
                           (css/& :.loading {:color "white"})
-                          (css/nested :span {:padding "10px"})
-                          (css/nested :.normal {:font-size "12px"})
+                          (css/+ :button {:background "none"})
                           (css/> :.action {:display "none"})
                           (css/> :div {:margin "10px"})
-                          (css/+ :button {:background "none"})
-                          (css/pseudo ::before {:position "absolute"})
-                          (css/next :label {:line-height "20px"}))
+                          (css/nested :.normal {:font-size "12px"})
+                          (css/nested :span {:padding "10px"})
+                          (css/next :label {:line-height "20px"})
+                          (css/pseudo-class :first-of-type {:display "none"})
+                          (css/pseudo-element ::before {:position "absolute"}))
                 (css/with :hero
                           (css/& :.fade {:opacity 0.5}))))
 
@@ -29,6 +30,7 @@
 (def button-css (str button-class "{display: block;background-color: red;}"))
 (def nested-button-css #{(str button-class "{background-color: red;display: block;}")
                          (str button-class "::before{position: absolute;}")
+                         (str button-class ":first-of-type{display: none;}")
                          (str button-class ".loading{color: white;}")
                          (str button-class " ~ label{line-height: 20px;}")
                          (str button-class " + button{background: none;}")
