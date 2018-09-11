@@ -5,7 +5,7 @@
    [clojure.string :as string]))
 
 (defn ->attr [[k v]]
-  (str (name k) ": "  v \;))
+  (str (name k) ": " v \;))
 
 (defn class-type [[k v :as kv]]
   (or (some-> k namespace keyword)
@@ -21,13 +21,14 @@
   ([[class style]]
    (->css nil [class style]))
   ([suffix [class style]]
-   (let [{:keys [descendant pseudo next compound child attrs adjacent]} (group-by class-type style)
+   (let [{:keys [descendant pseudo next compound child attrs adjacent pseudo-class]} (group-by class-type style)
          root (if (string? class) class (str (name class) \- suffix))]
      (let [css (string/join
                 \newline
                 (remove nil?
                         (concat
                          [(str "." root "{" (apply str (map ->attr attrs)) "}")]
+                         (map (partial ->nested root ":") pseudo-class)
                          (map (partial ->nested root "::") pseudo)
                          (map (partial ->nested root "") compound)
                          (map (partial ->nested root " ~ ") next)
@@ -56,6 +57,8 @@
     (assoc-in c [p (keyword n (name k))] m)))
 
 (def pseudo (partial nest "pseudo"))
+(def pseudo-element (partial nest "pseudo"))
+(def pseudo-class (partial nest "pseudo-class"))
 (def descendant (partial nest "descendant"))
 (def nested descendant)
 (def child (partial nest "child"))
@@ -63,6 +66,7 @@
 (def adjacent (partial nest "adjacent"))
 (def + adjacent)
 (def next (partial nest "next"))
+(def general-sibling (partial nest "next"))
 (def compound (partial nest "compound"))
 (def & compound)
 
