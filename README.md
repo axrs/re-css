@@ -61,13 +61,13 @@ component has been removed. All styles are [Garden][14] structures.
 
 ; An example extension of the default button-style changing the background color to blue
 (def ^:private blue-button-style
-  (assoc-in button-style [2 :background-color] "#008CBA"))
+  (assoc-in button-style [1 :background-color] "#008CBA"))
 
 (def ^:private black-button-style
-  (assoc-in button-style [2 :background-color] "#555555"))
+  (assoc-in button-style [1 :background-color] "#555555"))
 
 (def ^:private red-button-style
-  (assoc-in button-style [2 :background-color] "#ED2939"))
+  (assoc-in button-style [1 :background-color] "#ED2939"))
 
 ;; Form 1  ----------------------------------------------------------------------------------
 
