@@ -1,10 +1,11 @@
 (ns io.axrs.re-css.core
   #?(:clj
-     (:require [io.axrs.re-css.css]))
+     (:require [io.axrs.re-css.css :as css]))
   #?(:cljs
      (:require-macros [io.axrs.re-css.core]))
   #?(:cljs
      (:require
+      [io.axrs.re-css.css]
       [io.axrs.re-css.dom :as dom]
       [reagent.core])))
 

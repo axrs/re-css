@@ -3,6 +3,7 @@
   (:require
     [io.axrs.re-css.core :refer [defui styled]]
     [reagent.core :as r :refer-macros [with-let]]
+    [garden.stylesheet :as ss]
     [clojure.string :as string]))
 
 (def ^:private show? (r/atom false))
@@ -11,32 +12,34 @@
 
 ;; CSS STYLES --------------------------------------------------------------------------------
 
-; A basic component style map showing CSS properties which will eventually be attached
-; to an inline stylesheet as a generated `button-x-x-x` class
+; A basic component style vector showing CSS properties which will eventually be attached
+; to an inline stylesheet as a generated `button-x` class
 (def ^:private button-style
-  {:button {:background-color "#4CAF50"
+  [:button {:background-color "#4CAF50"
             :border           "none"
             :color            "white"
             :display          "block"
             :font-size        "16px"
             :padding          "15px 32px"
             :text-align       "center"
-            :text-decoration  "none"}})
+            :text-decoration  "none"}
+   (ss/at-media {:max-width "769px"}
+     [:&:hover {:font-weight 'bold}])])
 
 ; An example extension of the default button-style changing the background color to blue
 (def ^:private blue-button-style
-  (assoc-in button-style [:button :background-color] "#008CBA"))
+  (assoc-in button-style [2 :background-color] "#008CBA"))
 
 (def ^:private black-button-style
-  (assoc-in button-style [:button :background-color] "#555555"))
+  (assoc-in button-style [2 :background-color] "#555555"))
 
 (def ^:private red-button-style
-  (assoc-in button-style [:button :background-color] "#ED2939"))
+  (assoc-in button-style [2 :background-color] "#ED2939"))
 
 (def ^:private code-style
-  {:code {:background-color "#f7f7f7"
+  [:code {:background-color "#f7f7f7"
           :padding          "15px"
-          :border-left      "3px solid #7b7b7b"}})
+          :border-left      "3px solid #7b7b7b"}])
 
 ;; Form 1  ----------------------------------------------------------------------------------
 
@@ -46,9 +49,9 @@
   [:button (styled attrs [:button])
    text " | count " @count])
 
-(defui form-1-symbol blue-button-style render-button)
+(defui form-1-symbol [blue-button-style] render-button)
 
-(defui form-1 blue-button-style [attrs text]
+(defui form-1 [blue-button-style] [attrs text]
   [:button (styled attrs [:button])
    text " | count " @count])
 
@@ -63,9 +66,9 @@
        text " | count " @count
        " (initial was " initial-count ")"])))
 
-(defui form-2-symbol black-button-style form-2-symbol-def)
+(defui form-2-symbol [black-button-style] form-2-symbol-def)
 
-(defui form-2 black-button-style [attrs text]
+(defui form-2 [black-button-style] [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
       [:button (styled attrs [:button])
@@ -81,9 +84,9 @@
                              [:button (styled attrs [:button])
                               text " | count " @count])})
 
-(defui form-3-symbol red-button-style form-3-symbol-def)
+(defui form-3-symbol [red-button-style] form-3-symbol-def)
 
-(defui form-3 red-button-style
+(defui form-3 [red-button-style]
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
@@ -92,7 +95,7 @@
 
 ;; VIEWS  ----------------------------------------------------------------------------------
 
-(defui code code-style [attrs data]
+(defui code [code-style] [attrs data]
   [:pre (styled attrs [:code])
    data])
 

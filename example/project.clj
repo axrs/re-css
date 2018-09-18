@@ -2,10 +2,12 @@
   :min-lein-version "2.8.1"
   :source-paths ["src" "../src"]
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
-  :dependencies [[thheller/shadow-cljs "2.6.6"]
+  :dependencies [[thheller/shadow-cljs "2.6.8"]
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript
                   "1.10.238"
                   :exclusions
                   [com.google.javascript/closure-compiler-unshaded]]
+                 [garden "1.3.6"]
+                 [com.rpl/specter "1.1.1"]
                  [reagent "0.8.1"]])
