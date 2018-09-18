@@ -39,6 +39,8 @@ component has been removed. All styles are [Garden][14] structures.
 
 ### Example
 
+![Example][15]
+
 ```clojure
 (ns io.axrs.re-css.example.core
   (:require
@@ -163,3 +165,5 @@ These tools should be automatically applied before each commit through the use o
 [13]: https://img.shields.io/clojars/v/io.axrs/re-css.svg
 
 [14]: https://github.com/noprompt/garden
+
+[15]: example/example.gif
