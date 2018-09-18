@@ -21,7 +21,7 @@ or [reagent][1] applications. Ultimately removing the pains of cascading styles,
 
 **re-css** injects individual inline stylesheets (defined adjacent to the component as EDN structures) into
 the HEAD of the document JUST before the component is mounted; and subsequently removes the styles once the
-component has been removed.
+component has been removed. All styles are [Garden][14] structures.
 
 **re-css** aims to:
 
@@ -39,55 +39,65 @@ component has been removed.
 
 ### Example
 
+![Example][15]
+
 ```clojure
 (ns io.axrs.re-css.example.core
   (:require
-    [io.axrs.re-css.core :refer [defui styled]]))
+    [io.axrs.re-css.core :refer [defui styled]]
+    [garden.stylesheet :as ss]
 
-;; CSS styles defined as EDN  ---------------------------------------------------------------
-
+; A basic component style vector showing CSS properties which will eventually be attached
+; to an inline stylesheet as a generated `button-x` class
 (def ^:private button-style
-  {:button {:background-color "#4CAF50"
+  [:button {:background-color "#4CAF50"
             :border           "none"
             :color            "white"
             :display          "block"
             :font-size        "16px"
             :padding          "15px 32px"
             :text-align       "center"
-            :text-decoration  "none"}})
+            :text-decoration  "none"}
+   (ss/at-media {:max-width "769px"}
+     [:&:hover {:font-weight 'bold}])])
 
+; An example extension of the default button-style changing the background color to blue
 (def ^:private blue-button-style
-  (assoc-in button-style [:button :background-color] "#008CBA"))
+  (assoc-in button-style [1 :background-color] "#008CBA"))
+
+(def ^:private black-button-style
+  (assoc-in button-style [1 :background-color] "#555555"))
+
+(def ^:private red-button-style
+  (assoc-in button-style [1 :background-color] "#ED2939"))
 
 ;; Form 1  ----------------------------------------------------------------------------------
 
-(defn render-button [attrs text]
-  [:button (styled attrs ["button"])
-   text " | count " @count])
+(defn render-button
+  "A basic reagent button component"
+  [attrs text]
+  [:button (styled attrs [:button]) text])
 
-(defui form-1-symbol blue-button-style render-button)
+(defui form-1-symbol [blue-button-style] render-button)
 
-(defui form-1 blue-button-style [attrs text]
-  [:button (styled attrs ["button"])
-   text " | count " @count])
+(defui form-1 [blue-button-style] [attrs text]
+  [:button (styled attrs [:button]) text])
 
 ;; Form 2  ----------------------------------------------------------------------------------
 
-(defn form-2-symbol-def [initial-attrs text]
+(defn form-2-symbol-def
+  "A basic form-2 reagent button component"
+  [initial-attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled initial-attrs attrs ["button"])
-       text " | count " @count
-       " (initial was " initial-count ")"])))
+      [:button (styled initial-attrs attrs [:button]) text])))
 
-(defui form-2-symbol button-style form-2-symbol-def)
+(defui form-2-symbol [black-button-style] form-2-symbol-def)
 
-(defui form-2 button-style [attrs text]
+(defui form-2 [black-button-style] [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled attrs ["button"])
-       text " | count " @count
-       " (initial was " initial-count ")"])))
+      [:button (styled attrs [:button]) text])))
 
 ;; Form 3  ----------------------------------------------------------------------------------
 
@@ -95,27 +105,15 @@ component has been removed.
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs ["button"])
-                              text " | count " @count])})
+                             [:button (styled attrs [:button]) text])})
 
-(defui form-3-symbol button-style form-3-symbol-def)
+(defui form-3-symbol [red-button-style] form-3-symbol-def)
 
-(defui form-3 button-style
+(defui form-3 [red-button-style]
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs ["button"])
-                              text " | count " @count])})
-
-(defn view []
-  [:<>
-   [render-button {:on-click #(swap! show? not)} "Toggle Buttons"]
-   [form-1-symbol {:on-click inc-counter} "Form 1 Symbol"]
-   [form-1 {:on-click inc-counter} "Form 1"]
-   [form-2-symbol {:on-click inc-counter} "Form 2 Symbol"]
-   [form-2 {:on-click inc-counter} "Form 2"]
-   [form-3 {:on-click inc-counter} "Form 3"])
-   [form-3-symbol {:on-click inc-counter} "Form 3 Symbol"])])
+                             [:button (styled attrs [:button]) text])})
 ```
 
 [View Full Example][4]
@@ -165,3 +163,7 @@ These tools should be automatically applied before each commit through the use o
 [3]: https://clojars.org/io.axrs/re-css
 
 [13]: https://img.shields.io/clojars/v/io.axrs/re-css.svg
+
+[14]: https://github.com/noprompt/garden
+
+[15]: example/example.gif

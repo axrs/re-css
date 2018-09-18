@@ -22,7 +22,7 @@
     "remark-preset-lint-recommended": "^3.0.2",
     "remark-reference-links": "^4.0.2",
     "remark-toc": "^5.0.0",
-    "shadow-cljs": "^2.6.6",
+    "shadow-cljs": "^2.6.8",
     "shelljs": "^0.8.2"
   }
 }

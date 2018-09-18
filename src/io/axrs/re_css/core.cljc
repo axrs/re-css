@@ -1,10 +1,11 @@
 (ns io.axrs.re-css.core
-  (:require
-   [io.axrs.re-css.css])
+  #?(:clj
+     (:require [io.axrs.re-css.css :as css]))
   #?(:cljs
      (:require-macros [io.axrs.re-css.core]))
   #?(:cljs
      (:require
+      [io.axrs.re-css.css]
       [io.axrs.re-css.dom :as dom]
       [reagent.core])))
 
@@ -13,7 +14,7 @@
 (defmacro defui
   ([name style render-fn]
    `(let [suffix# (gensym "")
-          s# (io.axrs.re-css.css/css suffix# ~style)
+          s# (io.axrs.re-css.css/->css suffix# ~style)
           ~'styled (partial io.axrs.re-css.dom/styled s#)
           ~'form3? (map? ~render-fn)
           ~'render (if ~'form3? (:reagent-render ~render-fn) ~render-fn)]
@@ -40,7 +41,7 @@
                 (list? render-fn) :form-2)]
      `(defn ~name ~args
         (let [suffix# (gensym "")
-              s# (io.axrs.re-css.css/css suffix# ~style)
+              s# (io.axrs.re-css.css/->css suffix# ~style)
               ~'styled (partial io.axrs.re-css.dom/styled s#)]
           (reagent.core/create-class
            {:component-will-unmount
