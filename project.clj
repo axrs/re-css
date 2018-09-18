@@ -12,6 +12,7 @@
                   "1.10.238"
                   :exclusions
                   [com.google.javascript/closure-compiler-unshaded]]
+                 [garden "1.3.6"]
                  [reagent "0.8.1"]]
   :plugins [[lein-cljfmt "0.6.0"]]
   :cljfmt {:indents {do-all   [[:inner 0]]
