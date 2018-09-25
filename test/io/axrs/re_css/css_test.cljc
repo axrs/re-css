@@ -18,10 +18,4 @@
                                  "  font-weight: bold;"
                                  "}")]}
            (css/->css "test" [["body" {:padding 0}]
-                              [:form {:font-weight
-
-
-
-                                      "bold"}]])))))
-
-
+                              [:form {:font-weight "bold"}]])))))
