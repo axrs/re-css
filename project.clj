@@ -8,10 +8,7 @@
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target" "test-target/js"]
   :dependencies [[thheller/shadow-cljs "2.6.8"]
                  [org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript
-                  "1.10.238"
-                  :exclusions
-                  [com.google.javascript/closure-compiler-unshaded]]
+                 [org.clojure/clojurescript "1.10.238" :exclusions [com.google.javascript/closure-compiler-unshaded]]
                  [garden "1.3.6"]
                  [reagent "0.8.1"]
                  [com.rpl/specter "1.1.1"]]
