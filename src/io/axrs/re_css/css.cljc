@@ -6,12 +6,14 @@
    [clojure.walk :refer [postwalk]]))
 
 (defn- identify [suffix key]
-  (str (name key) "-" suffix))
+  (if (keyword? key)
+    (str (name key) "-" suffix)
+    key))
 
 (defn- mappify
   "Extracts the first level keys and assocs the top level classes into a map"
   [suffix style]
-  (let [keys (sp/select [sp/ALL keyword?] style)
+  (let [keys (sp/select [sp/ALL (complement coll?)] style)
         identify (partial identify suffix)
         identities (map identify keys)
         gen (css (sp/transform [sp/ALL keyword?] #(str "." (identify %)) style))]
