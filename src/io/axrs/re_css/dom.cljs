@@ -9,7 +9,7 @@
 (defonce ^:private document-head (delay (aget (js/document.getElementsByTagName "head") 0)))
 
 (defn- eval-styles [style]
-  (sp/transform [sp/ALL fn?] #(%) style))
+  (sp/transform (sp/walker fn?) #(%) style))
 
 (defn- attach-style
   "Takes a single style, generates the css, and attaches it to the head of the document"

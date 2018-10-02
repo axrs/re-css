@@ -18,10 +18,15 @@
                    "  display: none;"
                    "}"))
 
-(def fn-style [:fn ["fn-test" [".fn-test" (fn [] {:background-color 'red})]]])
+(def fn-style [:fn ["fn-test" [".fn-test" (fn [] {:background-color 'red})
+                               [:span (fn [] {:color 'white})]]]])
 (def fn-css-str (css-str
                  ".fn-test {"
                  "  background-color: red;"
+                 "}"
+                 ""
+                 ".fn-test span {"
+                 "  color: white;"
                  "}"))
 
 (def append-captor (atom []))
