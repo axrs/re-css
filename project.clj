@@ -1,4 +1,4 @@
-(defproject io.axrs/re-css "0.1.1-SNAPSHOT"
+(defproject io.axrs/re-css "0.1.1"
   :description "CSS-in-JS integration with reagent using garden (for use in SPA frameworks like re-frame)"
   :url "https://github.com/axrs/re-css.git"
   :license {:name "MIT"}
