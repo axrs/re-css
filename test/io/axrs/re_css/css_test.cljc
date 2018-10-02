@@ -18,4 +18,16 @@
                                  "  font-weight: bold;"
                                  "}")]}
            (css/->css "test" [["body" {:padding 0}]
-                              [:form {:font-weight "bold"}]])))))
+                              [:form {:font-weight "bold"}]]))))
+
+  (testing "allows nested classes/nodes"
+    (is (= {"body" ["body" (css-str
+                            "body {"
+                            "  padding: 0;"
+                            "}")]
+            :form  ["form-test" (css-str
+                                 ".form-test {"
+                                 "  font-weight: bold;"
+                                 "}")]}
+           (css/->css "test" [["body" {:padding 0}
+                               [:div {:display 'none}]]])))))
