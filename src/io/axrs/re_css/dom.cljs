@@ -1,21 +1,29 @@
 (ns io.axrs.re-css.dom
   (:require
-   [clojure.string :as string]))
+   [clojure.string :as string]
+   [com.rpl.specter :as sp]
+   [garden.core :refer [css]]))
 
 (defonce ^:private attached (atom {}))
 (defonce ^:private document (delay js/document))
 (defonce ^:private document-head (delay (aget (js/document.getElementsByTagName "head") 0)))
 
-(defn- attach-style [[_ [identifier css-str]]]
-  (if-let [exist (get @attached identifier)]
+(defn- eval-styles [style]
+  (sp/transform (sp/walker fn?) #(%) style))
+
+(defn- attach-style
+  "Takes a single style, generates the css, and attaches it to the head of the document"
+  [[_ [style-identifier garden-data]]]
+  (if-let [exist (get @attached style-identifier)]
     (do
-      (swap! attached update-in [identifier 1] inc)
+      (swap! attached update-in [style-identifier 1] inc)
       (first exist))
     (let [document @document
-          style (.createElement document "style")]
-      (.appendChild style (.createTextNode document css-str))
-      (.appendChild @document-head style)
-      (swap! attached assoc identifier [style 1]))))
+          style (.createElement document "style")
+          css-str (css (eval-styles garden-data))]
+      (.appendChild ^js style (.createTextNode ^js document css-str))
+      (.appendChild ^js @document-head style)
+      (swap! attached assoc style-identifier [style 1]))))
 
 (defn- detach-style [[_ [identifier _]]]
   (let [[element count] (get @attached identifier)]

@@ -58,6 +58,7 @@ component has been removed. All styles are [Garden][14] structures.
             :padding          "15px 32px"
             :text-align       "center"
             :text-decoration  "none"}
+   [:span (fn [] {:eval-before-mount true})] ; Note: This style will be evaluated ONCE before mount
    (ss/at-media {:max-width "769px"}
      [:&:hover {:font-weight 'bold}])])
 
