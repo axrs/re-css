@@ -18,7 +18,7 @@
     (doseq [arg arglist]
       (let [{:keys [tag]} (meta arg)]
         (println "\t\t" (left-pad arg longest)
-                 ": " (or tag "<undocumented>"))))))
+          ": " (or tag "<undocumented>"))))))
 
 (defn- print-doc
   [var]
@@ -36,7 +36,7 @@
 (defn- do-all
   [& promises]
   (js/Promise.all (for [p promises]
-                    (.catch (p) js/console.error))))
+                    (.catch (p) js/process.exit))))
 
 (defn- chain
   [p & promises]
@@ -73,8 +73,8 @@
   (if (some #{"-r"} args)
     (exec "npx shadow-cljs watch test-browser")
     (chain
-     #(exec "npx shadow-cljs compile test")
-     #(exec "npx karma start --single-run"))))
+      #(exec "npx shadow-cljs compile test")
+      #(exec "npx karma start --single-run"))))
 
 (defn lint
   "Runs various linters over the project files"
