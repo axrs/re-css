@@ -19,4 +19,4 @@ ensure_npm_deps () {
 
 ensure_githooks
 ensure_npm_deps
-lumo ./src/cli.cljs "$@"
+npx lumo ./src/cli.cljs "$@"
