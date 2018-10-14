@@ -17,6 +17,7 @@
     "karma-cljs-test": "^0.1.0",
     "karma-sourcemap-loader": "^0.3.7",
     "lumo": "^0.20.13",
+    "lumo-cljs": "^1.9.0-alpha",
     "remark": "^9.0.0",
     "remark-bookmarks": "^1.0.0",
     "remark-cli": "^5.0.0",
