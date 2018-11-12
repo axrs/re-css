@@ -1,5 +1,10 @@
 # re-css Changelog
 
+### 0.2.0 (Nov 12th, 2018)
+
+-   Removed `styled` and changed to `classes`. Now only returns a map of {:classes "generated class names"}
+    instead of all attrs
+
 ### 0.1.1 (Oct 2nd, 2018)
 
 -   Allow defining attributes as functions to be evaluated before style mount.

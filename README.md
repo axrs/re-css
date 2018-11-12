@@ -44,7 +44,7 @@ component has been removed. All styles are [Garden][14] structures.
 ```clojure
 (ns io.axrs.re-css.example.core
   (:require
-    [io.axrs.re-css.core :refer [defui styled]]
+    [io.axrs.re-css.core :refer [defui classes]]
     [garden.stylesheet :as ss]
 
 ; A basic component style vector showing CSS properties which will eventually be attached
@@ -77,12 +77,12 @@ component has been removed. All styles are [Garden][14] structures.
 (defn render-button
   "A basic reagent button component"
   [attrs text]
-  [:button (styled attrs [:button]) text])
+  [:button (merge attrs (classes attrs [:button])) text])
 
 (defui form-1-symbol [blue-button-style] render-button)
 
 (defui form-1 [blue-button-style] [attrs text]
-  [:button (styled attrs [:button]) text])
+  [:button (merge attrs (classes attrs [:button])) text])
 
 ;; Form 2  ----------------------------------------------------------------------------------
 
@@ -91,14 +91,14 @@ component has been removed. All styles are [Garden][14] structures.
   [initial-attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled initial-attrs attrs [:button]) text])))
+      [:button (merge attrs (classes initial-attrs attrs [:button])) text])))
 
 (defui form-2-symbol [black-button-style] form-2-symbol-def)
 
 (defui form-2 [black-button-style] [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled attrs [:button]) text])))
+      [:button (merge attrs (classes attrs [:button])) text])))
 
 ;; Form 3  ----------------------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ component has been removed. All styles are [Garden][14] structures.
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs [:button]) text])})
+                             [:button (merge attrs (classes attrs [:button])) text])})
 
 (defui form-3-symbol [red-button-style] form-3-symbol-def)
 
@@ -114,7 +114,7 @@ component has been removed. All styles are [Garden][14] structures.
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs [:button]) text])})
+                             [:button (merge attrs (classes attrs [:button])) text])})
 ```
 
 [View Full Example][4]

@@ -9,13 +9,13 @@
       [io.axrs.re-css.dom :as dom]
       [reagent.core])))
 
-#?(:cljs (def styled dom/styled))
+#?(:cljs (def classes dom/classes))
 
 (defmacro defui
   ([name style render-fn]
    `(let [suffix# (gensym "")
           s# (io.axrs.re-css.css/->css suffix# ~style)
-          ~'styled (partial io.axrs.re-css.dom/styled s#)
+          ~'classes (partial io.axrs.re-css.dom/classes s#)
           ~'form3? (map? ~render-fn)
           ~'render (if ~'form3? (:reagent-render ~render-fn) ~render-fn)]
       (def ~name
@@ -33,7 +33,7 @@
 
                 :reagent-render
                 (fn [& ~'args]
-                  (apply ~'render (update-in (vec ~'args) [0] assoc ::styled ~'styled))))))))
+                  (apply ~'render (update-in (vec ~'args) [0] assoc ::classes ~'classes))))))))
 
   ([name style args render-fn]
    (let [form (cond
@@ -42,7 +42,7 @@
      `(defn ~name ~args
         (let [suffix# (gensym "")
               s# (io.axrs.re-css.css/->css suffix# ~style)
-              ~'styled (partial io.axrs.re-css.dom/styled s#)]
+              ~'classes (partial io.axrs.re-css.dom/classes s#)]
           (reagent.core/create-class
            {:component-will-unmount
             (fn [this#]

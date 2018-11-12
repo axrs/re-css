@@ -1,7 +1,7 @@
 (ns io.axrs.re-css.example.core
   (:refer-clojure :exclude [count])
   (:require
-    [io.axrs.re-css.core :refer [defui styled]]
+    [io.axrs.re-css.core :refer [defui classes]]
     [reagent.core :as r :refer-macros [with-let]]
     [garden.stylesheet :as ss]
     [clojure.string :as string]))
@@ -46,13 +46,13 @@
 (defn render-button
   "A basic reagent button component"
   [attrs text]
-  [:button (styled attrs [:button])
+  [:button (merge attrs (classes attrs [:button]))
    text " | count " @count])
 
 (defui form-1-symbol [blue-button-style] render-button)
 
 (defui form-1 [blue-button-style] [attrs text]
-  [:button (styled attrs [:button])
+  [:button (merge attrs (classes attrs [:button]))
    text " | count " @count])
 
 ;; Form 2  ----------------------------------------------------------------------------------
@@ -62,7 +62,7 @@
   [initial-attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled initial-attrs attrs [:button])
+      [:button (merge attrs (classes initial-attrs attrs [:button]))
        text " | count " @count
        " (initial was " initial-count ")"])))
 
@@ -71,7 +71,7 @@
 (defui form-2 [black-button-style] [attrs text]
   (let [initial-count @count]
     (fn [attrs text]
-      [:button (styled attrs [:button])
+      [:button (merge attrs (classes attrs [:button]))
        text " | count " @count
        " (initial was " initial-count ")"])))
 
@@ -81,7 +81,7 @@
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs [:button])
+                             [:button (merge attrs (classes attrs [:button]))
                               text " | count " @count])})
 
 (defui form-3-symbol [red-button-style] form-3-symbol-def)
@@ -90,13 +90,13 @@
   {:component-will-unmount (fn [this] (js/console.log "Form 3 unmounted"))
    :component-did-mount    (fn [this] (js/console.log "Form 3 mounted"))
    :reagent-render         (fn [attrs text]
-                             [:button (styled attrs [:button])
+                             [:button (merge attrs (classes attrs [:button]))
                               text " | count " @count])})
 
 ;; VIEWS  ----------------------------------------------------------------------------------
 
 (defui code [code-style] [attrs data]
-  [:pre (styled attrs [:code])
+  [:pre (merge attrs (classes attrs [:code]))
    data])
 
 (defn- show-styles

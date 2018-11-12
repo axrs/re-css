@@ -40,9 +40,9 @@
 (defn detach [styles]
   (mapv detach-style styles))
 
-(defonce ^:private hash-key :io.axrs.re-css.core/styled)
+(defonce ^:private hash-key :io.axrs.re-css.core/classes)
 
-(defn styled
+(defn classes
   ([{css hash-key :as attrs} classes]
    (if css
      (css attrs classes)
@@ -54,6 +54,4 @@
      (let [class-names (->> classes
                             (map #(get-in style [% 0]))
                             (string/join " "))]
-       (-> attrs
-           (assoc :class (str class-names " " class))
-           (dissoc :io.axrs.re-css.core/styled))))))
+       {:class (str class-names " " class)}))))
