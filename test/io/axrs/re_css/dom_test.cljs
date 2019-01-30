@@ -1,8 +1,14 @@
 (ns io.axrs.re-css.dom-test
+  (:require-macros
+   [garden.def :refer [defkeyframes]])
   (:require
    [clojure.string :as string]
    [clojure.test :refer [deftest testing is use-fixtures]]
    [io.axrs.re-css.dom :as dom]))
+
+(defkeyframes test-animation
+  [:from {:opacity 0}]
+  [:to {:opacity 1}])
 
 (defn css-str [& lines]
   (string/join \newline lines))
@@ -86,4 +92,9 @@
   (testing "evaluates functions in style before attach"
     (dom/attach-style fn-style)
     (is (= 1 (get-in @dom/attached ["fn-test" 1])))
-    (is (= [form-css-str fn-css-str] @css-captor))))
+    (is (= [form-css-str fn-css-str] @css-captor)))
+
+  (testing "allows attaching animations"
+    (dom/attach-style [:test-animation ["test-animation" test-animation]])
+    (prn @css-captor)
+    (prn @dom/attached)))
