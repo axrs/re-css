@@ -1,8 +1,12 @@
 # re-css Changelog
 
+### 0.2.1 (Jan 30th, 2019)
+
+-   Added the ability to use `defkeyframes` (and possibly other @ style css attributes)
+
 ### 0.2.0 (Nov 12th, 2018)
 
--   Removed `styled` and changed to `classes`. Now only returns a map of {:classes "generated class names"}
+-   Removed `styled` and changed to `classes`. Now only returns a map of {:class "generated class names"}
     instead of all attrs
 
 ### 0.1.1 (Oct 2nd, 2018)

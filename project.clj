@@ -1,7 +1,10 @@
-(defproject io.axrs/re-css "0.2.0"
+(defproject io.axrs/re-css "0.2.1"
   :description "CSS-in-JS integration with reagent using garden (for use in SPA frameworks like re-frame)"
   :url "https://github.com/axrs/re-css.git"
-  :license {:name "MIT"}
+  :license {:name         "Eclipse Public License - v 1.0"
+            :url          "http://www.eclipse.org/legal/epl-v10.html"
+            :distribution :repo
+            :comments     "same as Clojure"}
   :min-lein-version "2.8.1"
   :source-paths ["src"]
   :test-paths ["test"]
