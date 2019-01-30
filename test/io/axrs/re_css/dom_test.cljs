@@ -6,12 +6,11 @@
    [clojure.test :refer [deftest testing is use-fixtures]]
    [io.axrs.re-css.dom :as dom]))
 
-(defkeyframes test-animation
-  [:from {:opacity 0}]
-  [:to {:opacity 1}])
+(defn- string-clean [s]
+  (string/replace s #"[\s]+" \space))
 
-(defn css-str [& lines]
-  (string/join \newline lines))
+(defn- css-str [& lines]
+  (string-clean (string/join \space lines)))
 
 (def form [:form ["form-test" [".form-test" {:font-weight 'bold}
                                [:span {:display 'none}]]]])
@@ -19,7 +18,6 @@
                    ".form-test {"
                    "  font-weight: bold;"
                    "}"
-                   ""
                    ".form-test span {"
                    "  display: none;"
                    "}"))
@@ -30,7 +28,6 @@
                  ".fn-test {"
                  "  background-color: red;"
                  "}"
-                 ""
                  ".fn-test span {"
                  "  color: white;"
                  "}"))
@@ -39,7 +36,7 @@
 (def css-captor (atom []))
 (def remove-captor (atom false))
 (defonce script #js {"remove"      #(reset! remove-captor true)
-                     "appendChild" #(swap! css-captor conj %)})
+                     "appendChild" #(swap! css-captor conj (string-clean %))})
 (defonce document #js {"createTextNode" identity
                        "createElement"  (constantly script)})
 
@@ -92,9 +89,24 @@
   (testing "evaluates functions in style before attach"
     (dom/attach-style fn-style)
     (is (= 1 (get-in @dom/attached ["fn-test" 1])))
-    (is (= [form-css-str fn-css-str] @css-captor)))
+    (is (= [form-css-str fn-css-str] @css-captor))))
 
+(defkeyframes test-animation
+  [:from {:opacity 0}]
+  [:to {:opacity 1}])
+
+(def animation-str (css-str
+                    "@keyframes test-animation {"
+                    "  from { "
+                    "    opacity: 0;"
+                    "  }"
+                    "  to { "
+                    "    opacity: 1;"
+                    "  }"
+                    "}"))
+
+(deftest attach-style-animation-test
   (testing "allows attaching animations"
-    (dom/attach-style [:test-animation ["test-animation" test-animation]])
-    (prn @css-captor)
-    (prn @dom/attached)))
+    (dom/attach-style ["keyframes-test-animation" ["keyframes-test-animation" test-animation]])
+    (is (= 1 (get-in @dom/attached ["keyframes-test-animation" 1])))
+    (is (= [animation-str] @css-captor))))
