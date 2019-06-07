@@ -14,6 +14,7 @@
 
 (def form [:form ["form-test" [".form-test" {:font-weight 'bold}
                                [:span {:display 'none}]]]])
+
 (def form-css-str (css-str
                    ".form-test {"
                    "  font-weight: bold;"
@@ -24,6 +25,7 @@
 
 (def fn-style [:fn ["fn-test" [".fn-test" (fn [] {:background-color 'red})
                                [:span (fn [] {:color 'white})]]]])
+
 (def fn-css-str (css-str
                  ".fn-test {"
                  "  background-color: red;"
@@ -92,6 +94,21 @@
     (dom/attach-style fn-style)
     (is (= 1 (get-in @dom/attached ["fn-test" 1])))
     (is (= [form-css-str fn-css-str] @css-captor))))
+
+(deftest transform-fns-test
+  (swap! dom/transform-fns assoc :display (constantly "inline-block"))
+  (swap! dom/transform-fns assoc :color (constantly "black"))
+  (let [prop-change [:prop ["prop-test" [".prop-test" {:display "block"
+                                                       :color   "red"}]]]
+        form-css-str (css-str
+                      ".prop-test {"
+                      "  display: inline-block;"
+                      "  color: black;"
+                      "}")]
+
+    (testing "transforms properties of keys if fn specified"
+      (dom/attach-style prop-change)
+      (is (= [form-css-str] @css-captor)))))
 
 (defkeyframes test-animation
   [:from {:opacity 0}]

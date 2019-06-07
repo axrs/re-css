@@ -6,13 +6,22 @@
    [garden.core :refer [css]]))
 
 (defonce ^:private attached (atom {}))
-(defonce ^:private ^:binding *document* js/document)
+(def ^:private ^:dynamic *document* js/document)
+
+(defonce ^:private transform-fns (atom {}))
 
 (defn- ^:dynamic ^js document-head []
   (aget (.getElementsByTagName *document* "head") 0))
 
-(defn- eval-styles [style]
-  (sp/transform (sp/walker fn?) #(%) style))
+(defn- eval-styles [edn-style]
+  (let [transform-fns @transform-fns
+        transform-props (set (keys transform-fns))
+        prop-to-transform (comp (partial contains? transform-props) first)]
+    (->> edn-style
+         (sp/transform (sp/walker fn?) #(%))
+         (sp/transform [(sp/walker map?) sp/ALL prop-to-transform] (fn transform-prop [[k v]]
+                                                                     (let [f (get transform-fns k)]
+                                                                       [k (f v)]))))))
 
 (defn- attach-style
   "Takes a single style, generates the css, and attaches it to the head of the document"
