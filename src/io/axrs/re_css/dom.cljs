@@ -1,12 +1,15 @@
 (ns io.axrs.re-css.dom
   (:require
+   [oops.core :refer [oget]]
    [clojure.string :as string]
    [com.rpl.specter :as sp]
    [garden.core :refer [css]]))
 
 (defonce ^:private attached (atom {}))
-(defonce ^:private document (delay js/document))
-(defonce ^:private document-head (delay (aget (js/document.getElementsByTagName "head") 0)))
+(defonce ^:private ^:binding *document* js/document)
+
+(defn- ^:dynamic ^js document-head []
+  (aget (.getElementsByTagName *document* "head") 0))
 
 (defn- eval-styles [style]
   (sp/transform (sp/walker fn?) #(%) style))
@@ -18,11 +21,10 @@
     (do
       (swap! attached update-in [style-identifier 1] inc)
       (first exist))
-    (let [document @document
-          style (.createElement document "style")
+    (let [style (.createElement *document* "style")
           css-str (css (eval-styles garden-data))]
-      (.appendChild ^js style (.createTextNode ^js document css-str))
-      (.appendChild ^js @document-head style)
+      (.appendChild ^js style (.createTextNode *document* css-str))
+      (.appendChild (document-head) style)
       (swap! attached assoc style-identifier [style 1]))))
 
 (defn- detach-style [[_ [identifier _]]]
@@ -53,5 +55,22 @@
      (css-styles attrs classes)
      (let [class-names (->> classes
                             (map #(get-in style [% 0]))
-                            (string/join " "))]
-       {:class (str class-names " " class)}))))
+                            (string/join \space))]
+       {:class (str class-names \space class)}))))
+
+(defn- ->str [v]
+  (cond
+    (keyword? v) (name v)
+    (symbol? v) (str v)
+    :else v))
+
+(defn- polyfill-supports? [css-property css-value]
+  (let [s (.-style (.createElement *document* "div"))]
+    (set! (.-cssText s) (str css-property \: css-value))
+    (not (string/blank? (.-cssText s)))))
+
+(defn supports? [css-property css-value]
+  (let [[css-property css-value] (map ->str [css-property css-value])]
+    (if-let [native-check (oget js/window ["?CSS" "?supports"])]
+      (native-check css-property css-value)
+      (polyfill-supports? css-property css-value))))

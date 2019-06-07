@@ -45,14 +45,15 @@
   (reset! css-captor [])
   (reset! remove-captor false)
   (is (= {} @dom/attached) "ARC atom is not empty")
-  (with-redefs [dom/document (atom document)
-                dom/document-head (atom #js {"appendChild" #(swap! append-captor conj %)})]
+  (binding [dom/*document* document
+            dom/document-head (constantly #js {"appendChild" #(swap! append-captor conj %)})]
     (f))
   (reset! dom/attached {}))
 
 (use-fixtures :each reset-attached)
 
 (deftest detach-style-test
+
   (testing "does nothing if the style is not loaded"
     (dom/detach-style form)
     (is (empty? @dom/attached)))
@@ -74,6 +75,7 @@
       (is (true? @remove-captor)))))
 
 (deftest attach-style-test
+
   (testing "attaches the style to the head of the document if not defined"
     (dom/attach-style form)
     (is (= 1 (get-in @dom/attached ["form-test" 1])))
@@ -106,7 +108,21 @@
                     "}"))
 
 (deftest attach-style-animation-test
+
   (testing "allows attaching animations"
     (dom/attach-style ["keyframes-test-animation" ["keyframes-test-animation" test-animation]])
     (is (= 1 (get-in @dom/attached ["keyframes-test-animation" 1])))
     (is (= [animation-str] @css-captor))))
+
+(deftest supports?-test
+
+  (testing "false if css property is invalid"
+    (is (false? (dom/supports? "thisDoesNotExist" "block"))))
+
+  (testing "false if css value is invalid for property"
+    (is (false? (dom/supports? "display" "thisDoesNotExist"))))
+
+  (testing "true if value is supported"
+    (is (true? (dom/supports? 'display "block")))
+    (is (true? (dom/supports? :display "block")))
+    (is (true? (dom/supports? "display" "block")))))

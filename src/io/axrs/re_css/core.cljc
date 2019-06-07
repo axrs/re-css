@@ -10,6 +10,7 @@
       [reagent.core])))
 
 #?(:cljs (def classes dom/classes))
+#?(:cljs (def supports? dom/supports?))
 
 (defmacro defui
   ([name style render-fn]

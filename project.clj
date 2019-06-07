@@ -11,8 +11,9 @@
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target" "test-target/js"]
   :dependencies [
                  [thheller/shadow-cljs "2.8.37" :scope "provided"]
-                 [garden "1.3.6"]
+                 [garden "1.3.9"]
                  [reagent "0.8.1" :scope "provided"]
+                 [binaryage/oops "0.7.0"]
                  [com.rpl/specter "1.1.2"]]
   :plugins [[lein-cljfmt "0.6.0"]]
   :cljfmt {:indents {do-all   [[:inner 0]]

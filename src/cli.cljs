@@ -1,5 +1,6 @@
 (require
-  '[cljs.pprint :refer [cl-format]])
+  '[cljs.pprint :refer [cl-format]]
+  '[clojure.string :as string])
 (def ^:private util (js/require "util"))
 (def ^:private shx (js/require "shelljs"))
 (def ^:private exec (util.promisify shx.exec))
@@ -44,6 +45,9 @@
       (.then #(apply chain promises))
       (.catch js/console.error)))
 
+(defn- shadow-cljs [& args]
+  (exec (str "lein trampoline run -m shadow.cljs.devtools.cli " (string/join \space args))))
+
 (defn deps
   "Installs or updates all of the projects dependencies"
   []
@@ -63,7 +67,7 @@
   []
   (println "Building...")
   (do-all
-    #(exec "npx shadow-cljs release app --source-maps")))
+    #(shadow-cljs "release" "app" "--source-maps")))
 
 (defn unit-test
   "Runs unit tests"
@@ -71,9 +75,9 @@
   (clean)
   (println "Testing...")
   (if (some #{"-r"} args)
-    (exec "npx shadow-cljs watch test-browser")
+    (shadow-cljs "watch" "test-browser")
     (chain
-     #(exec "npx shadow-cljs compile test")
+     #(shadow-cljs "compile" "test")
      #(exec "npx karma start --single-run"))))
 
 (defn lint
