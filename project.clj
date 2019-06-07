@@ -1,4 +1,4 @@
-(defproject io.axrs/re-css "0.2.1"
+(defproject io.axrs/re-css "1.0.0-SNAPSHOT"
   :description "CSS-in-JS integration with reagent using garden (for use in SPA frameworks like re-frame)"
   :url "https://github.com/axrs/re-css.git"
   :license {:name         "Eclipse Public License - v 1.0"
@@ -9,11 +9,10 @@
   :source-paths ["src"]
   :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target" "test-target/js"]
-  :dependencies [[thheller/shadow-cljs "2.7.20"]
-                 [org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.10.439" :exclusions [com.google.javascript/closure-compiler-unshaded]]
+  :dependencies [
+                 [thheller/shadow-cljs "2.8.37" :scope "provided"]
                  [garden "1.3.6"]
-                 [reagent "0.8.1"]
+                 [reagent "0.8.1" :scope "provided"]
                  [com.rpl/specter "1.1.2"]]
   :plugins [[lein-cljfmt "0.6.0"]]
   :cljfmt {:indents {do-all   [[:inner 0]]

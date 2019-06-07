@@ -1,5 +1,10 @@
 # re-css Changelog
 
+### 1.0.0 (????, 2019)
+
+-   Added CSS property support detection 
+-   Added support for transforming css properties before converting to a string
+
 ### 0.2.1 (Jan 30th, 2019)
 
 -   Added the ability to use `defkeyframes` (and possibly other @ style css attributes)
