@@ -3,6 +3,7 @@
 CSS-in-JS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
 
 [![Clojars Project][13]][3]
+[![CircleCI][17]][16]
 
 ## Table of Contents
 
@@ -168,3 +169,7 @@ These tools should be automatically applied before each commit through the use o
 [14]: https://github.com/noprompt/garden
 
 [15]: example/example.gif
+
+[16]: https://circleci.com/gh/axrs/re-css
+
+[17]: https://circleci.com/gh/axrs/re-css.svg?style=svg

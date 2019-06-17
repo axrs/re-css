@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd $(realpath $(dirname $0))
+cd "$(realpath "$(dirname "$0")")"
 if [[ ! -f project.sh ]];then
-	curl --silent -OL https://raw.githubusercontent.com/jesims/backpack/master/project.sh
+	curl -OL https://raw.githubusercontent.com/jesims/backpack/master/project.sh
 fi
-source project.sh
-if [[ $? -ne 0 ]];then
+if ! source project.sh;then
 	exit 1
 fi
-IFS=$'\n\t'
 
 ensure_githooks () {
 	local githooks_folder="githooks"
@@ -19,14 +17,14 @@ ensure_githooks () {
 }
 
 ensure_npm_deps () {
-	if [[ ! -d 'node_modules/shelljs' ]]; then
+	if [[ ! -d 'node_modules/karma' ]]; then
 		echo "Installing node modules"
 		npm install
 	fi
 }
 
 shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli $@
+	lein trampoline run -m shadow.cljs.devtools.cli "$@"
 }
 
 ## deps:
@@ -85,7 +83,9 @@ format () {
 		--use bookmarks -o
 }
 
-ensure_githooks
-ensure_npm_deps
+if ! ${CI:-false};then
+	ensure_githooks
+	ensure_npm_deps
+fi
 
-script-invoke $@
+script-invoke "$@"
