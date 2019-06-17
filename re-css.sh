@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd $(realpath $(dirname $0))
+cd "$(realpath "$(dirname "$0")")"
 if [[ ! -f project.sh ]];then
 	curl --silent -OL https://raw.githubusercontent.com/jesims/backpack/master/project.sh
 fi
-source project.sh
-if [[ $? -ne 0 ]];then
+if ! source project.sh;then
 	exit 1
 fi
 
@@ -25,7 +24,7 @@ ensure_npm_deps () {
 }
 
 shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli $@
+	lein trampoline run -m shadow.cljs.devtools.cli "$@"
 }
 
 ## deps:
@@ -89,4 +88,4 @@ if ! ${CI:-false};then
 	ensure_npm_deps
 fi
 
-script-invoke $@
+script-invoke "$@"
