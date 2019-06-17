@@ -8,7 +8,6 @@ source project.sh
 if [[ $? -ne 0 ]];then
 	exit 1
 fi
-IFS=$'\n\t'
 
 ensure_githooks () {
 	local githooks_folder="githooks"
