@@ -13,6 +13,15 @@
 (defn- ^:dynamic ^js document-head []
   (aget (.getElementsByTagName *document* "head") 0))
 
+(defn add-transformation [prop f]
+  (swap! transform-fns update prop conj f))
+
+(defn remove-transformation [prop f]
+  (let [fns (seq (remove #{f} (get @transform-fns prop)))]
+    (if fns
+      (swap! transform-fns assoc prop fns)
+      (swap! transform-fns dissoc prop))))
+
 (defn- eval-styles [edn-style]
   (let [transform-fns @transform-fns
         transform-props (set (keys transform-fns))
@@ -20,7 +29,7 @@
     (->> edn-style
          (sp/transform (sp/walker fn?) #(%))
          (sp/transform [(sp/walker map?) sp/ALL prop-to-transform] (fn transform-prop [[k v]]
-                                                                     (let [f (get transform-fns k)]
+                                                                     (let [f (apply comp (get transform-fns k))]
                                                                        [k (f v)]))))))
 
 (defn- attach-style

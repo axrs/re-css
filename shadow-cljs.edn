@@ -7,8 +7,8 @@
                        :test-dir        "target/browser/"
                        :ns-regexp       "-test$"
                        :closure-defines {goog.DEBUG false}
+                       :runner          shadow.test.browser
                        :ignore-warnings true
-                       :runner-ns       io.axrs.re-css.test.runner
                        :devtools        {:http-port 8091
                                          :hud       false
                                          :http-root "target/browser/"}}}

@@ -11,6 +11,8 @@
 
 #?(:cljs (def classes dom/classes))
 #?(:cljs (def supports? dom/supports?))
+#?(:cljs (def add-transformation dom/add-transformation))
+#?(:cljs (def remove-transformation dom/remove-transformation))
 
 (defmacro defui
   ([name style render-fn]

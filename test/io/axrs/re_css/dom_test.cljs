@@ -96,19 +96,52 @@
     (is (= [form-css-str fn-css-str] @css-captor))))
 
 (deftest transform-fns-test
-  (swap! dom/transform-fns assoc :display (constantly "inline-block"))
-  (swap! dom/transform-fns assoc :color (constantly "black"))
-  (let [prop-change [:prop ["prop-test" [".prop-test" {:display "block"
+  (reset! dom/transform-fns {})
+  (dom/add-transformation :display (fn [v]
+                                     (is (= "none" v))
+                                     "inline-block"))
+  (dom/add-transformation :display (fn [v]
+                                     (is (= "inline-block" v))
+                                     "block"))
+  (dom/add-transformation :color (constantly "black"))
+  (let [prop-change [:prop ["prop-test" [".prop-test" {:display "none"
                                                        :color   "red"}]]]
         form-css-str (css-str
                       ".prop-test {"
-                      "  display: inline-block;"
+                      "  display: block;"
                       "  color: black;"
                       "}")]
 
     (testing "transforms properties of keys if fn specified"
       (dom/attach-style prop-change)
-      (is (= [form-css-str] @css-captor)))))
+      (is (= [form-css-str] @css-captor))))
+  (reset! dom/transform-fns {}))
+
+(deftest add-remove-transformations-test
+  (reset! dom/transform-fns {})
+  (let [f (constantly "f")
+        g (constantly "g")]
+
+    (testing "inserts"
+      (dom/add-transformation :display f)
+      (is (= (list f)
+             (get @dom/transform-fns :display)))
+
+      (testing "then prepends"
+        (dom/add-transformation :display g)
+        (is (= (list g f)
+               (get @dom/transform-fns :display))))
+
+      (testing "can remove from anywhere"
+        (dom/remove-transformation :display f)
+        (is (= (list g)
+               (get @dom/transform-fns :display)))
+
+        (dom/remove-transformation :display g)
+        (is (nil? (get @dom/transform-fns :display)))
+        (is (false? (contains? @dom/transform-fns :display))))))
+
+  (reset! dom/transform-fns {}))
 
 (defkeyframes test-animation
   [:from {:opacity 0}]
