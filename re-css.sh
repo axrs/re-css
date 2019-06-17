@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(realpath "$(dirname "$0")")"
 if [[ ! -f project.sh ]];then
-	curl --silent -OL https://raw.githubusercontent.com/jesims/backpack/master/project.sh
+	curl -OL https://raw.githubusercontent.com/jesims/backpack/master/project.sh
 fi
 if ! source project.sh;then
 	exit 1
