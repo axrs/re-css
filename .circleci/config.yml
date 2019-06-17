@@ -1,0 +1,75 @@
+version: 2
+
+aliases:
+  containers:
+    docker: &DEFAULT
+    - image: jesiio/build-bus:latest
+      environment:
+        JVM_OPTS: -Xmx3200m
+        DEBUG: 1
+  caches:
+    node_cache: &NODE_CACHE
+      key: node-{{ checksum "/tmp/.node_version" }}-{{ checksum "package.json" }}
+      paths:
+      - node_modules
+      - ~/.shadow-cljs
+    lein_cache: &LEIN_CACHE
+      key: lein-{{ checksum "project.clj" }}
+      paths:
+      - ~/.lein
+      - ~/.m2
+
+jobs:
+  deps:
+    docker: *DEFAULT
+    steps:
+    - checkout
+    - restore_cache:
+        <<: *NODE_CACHE
+    - restore_cache:
+        <<: *LEIN_CACHE
+    - run: './re-css.sh deps'
+    - save_cache:
+        <<: *NODE_CACHE
+    - save_cache:
+        <<: *LEIN_CACHE
+
+  lint:
+    docker: *DEFAULT
+    steps:
+    - checkout
+    - restore_cache:
+        <<: *NODE_CACHE
+    - restore_cache:
+        <<: *LEIN_CACHE
+    - run: './re-css.sh lint'
+    - save_cache:
+        <<: *NODE_CACHE
+    - save_cache:
+        <<: *LEIN_CACHE
+
+  unit_test:
+    docker: *DEFAULT
+    steps:
+    - checkout
+    - restore_cache:
+        <<: *NODE_CACHE
+    - restore_cache:
+        <<: *LEIN_CACHE
+    - run: './re-css.sh test'
+    - save_cache:
+        <<: *NODE_CACHE
+    - save_cache:
+        <<: *LEIN_CACHE
+
+workflows:
+  version: 2
+  default_flow:
+    jobs:
+    - deps
+    - lint:
+        requires:
+        - deps
+    - unit_test:
+        requires:
+        - deps
