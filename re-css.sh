@@ -18,7 +18,7 @@ ensure_githooks () {
 }
 
 ensure_npm_deps () {
-	if [[ ! -d 'node_modules/shelljs' ]]; then
+	if [[ ! -d 'node_modules/karma' ]]; then
 		echo "Installing node modules"
 		npm install
 	fi
