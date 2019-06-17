@@ -2,7 +2,7 @@
 
 -   Added CSS property support detection with `supports?`
 -   Added the ability to change properties through transformation fns
--   Use Bash as CLI instead of LUMP
+-   Use Bash as CLI instead of Lumo
 
 # 0.2.1 / 2019-01-30
 
