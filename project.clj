@@ -1,7 +1,7 @@
-(defproject io.axrs/re-css "1.0.0-SNAPSHOT"
+(defproject io.axrs/re-css "1.0.0"
   :description "CSS-in-JS integration with reagent using garden (for use in SPA frameworks like re-frame)"
   :url "https://github.com/axrs/re-css.git"
-  :license {:name         "Eclipse Public License - v 1.0"
+  :license {:name         "Eclipse Public License - v1.0"
             :url          "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments     "same as Clojure"}
@@ -16,9 +16,7 @@
                  [binaryage/oops "0.7.0"]
                  [com.rpl/specter "1.1.2"]]
   :plugins [[lein-cljfmt "0.6.0"]]
-  :cljfmt {:indents {do-all   [[:inner 0]]
-                     doto     [[:block 0]]
-                     .use     [[:block 0]]
+  :cljfmt {:indents {doto     [[:block 0]]
                      :require [[:block 0]]
                      require  [[:block 0]]}}
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]]}}
