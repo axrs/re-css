@@ -85,7 +85,9 @@ format () {
 		--use bookmarks -o
 }
 
-ensure_githooks
-ensure_npm_deps
+if ! ${CI:-false};then
+	ensure_githooks
+	ensure_npm_deps
+fi
 
 script-invoke $@
