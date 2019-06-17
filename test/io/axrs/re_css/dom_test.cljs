@@ -14,6 +14,7 @@
 
 (def form [:form ["form-test" [".form-test" {:font-weight 'bold}
                                [:span {:display 'none}]]]])
+
 (def form-css-str (css-str
                    ".form-test {"
                    "  font-weight: bold;"
@@ -24,6 +25,7 @@
 
 (def fn-style [:fn ["fn-test" [".fn-test" (fn [] {:background-color 'red})
                                [:span (fn [] {:color 'white})]]]])
+
 (def fn-css-str (css-str
                  ".fn-test {"
                  "  background-color: red;"
@@ -45,14 +47,15 @@
   (reset! css-captor [])
   (reset! remove-captor false)
   (is (= {} @dom/attached) "ARC atom is not empty")
-  (with-redefs [dom/document (atom document)
-                dom/document-head (atom #js {"appendChild" #(swap! append-captor conj %)})]
+  (binding [dom/*document* document
+            dom/document-head (constantly #js {"appendChild" #(swap! append-captor conj %)})]
     (f))
   (reset! dom/attached {}))
 
 (use-fixtures :each reset-attached)
 
 (deftest detach-style-test
+
   (testing "does nothing if the style is not loaded"
     (dom/detach-style form)
     (is (empty? @dom/attached)))
@@ -74,6 +77,7 @@
       (is (true? @remove-captor)))))
 
 (deftest attach-style-test
+
   (testing "attaches the style to the head of the document if not defined"
     (dom/attach-style form)
     (is (= 1 (get-in @dom/attached ["form-test" 1])))
@@ -91,6 +95,54 @@
     (is (= 1 (get-in @dom/attached ["fn-test" 1])))
     (is (= [form-css-str fn-css-str] @css-captor))))
 
+(deftest transform-fns-test
+  (reset! dom/transform-fns {})
+  (dom/add-transformation :display (fn [v]
+                                     (is (= "none" v))
+                                     "inline-block"))
+  (dom/add-transformation :display (fn [v]
+                                     (is (= "inline-block" v))
+                                     "block"))
+  (dom/add-transformation :color (constantly "black"))
+  (let [prop-change [:prop ["prop-test" [".prop-test" {:display "none"
+                                                       :color   "red"}]]]
+        form-css-str (css-str
+                      ".prop-test {"
+                      "  display: block;"
+                      "  color: black;"
+                      "}")]
+
+    (testing "transforms properties of keys if fn specified"
+      (dom/attach-style prop-change)
+      (is (= [form-css-str] @css-captor))))
+  (reset! dom/transform-fns {}))
+
+(deftest add-remove-transformations-test
+  (reset! dom/transform-fns {})
+  (let [f (constantly "f")
+        g (constantly "g")]
+
+    (testing "inserts"
+      (dom/add-transformation :display f)
+      (is (= (list f)
+             (get @dom/transform-fns :display)))
+
+      (testing "then prepends"
+        (dom/add-transformation :display g)
+        (is (= (list g f)
+               (get @dom/transform-fns :display))))
+
+      (testing "can remove from anywhere"
+        (dom/remove-transformation :display f)
+        (is (= (list g)
+               (get @dom/transform-fns :display)))
+
+        (dom/remove-transformation :display g)
+        (is (nil? (get @dom/transform-fns :display)))
+        (is (false? (contains? @dom/transform-fns :display))))))
+
+  (reset! dom/transform-fns {}))
+
 (defkeyframes test-animation
   [:from {:opacity 0}]
   [:to {:opacity 1}])
@@ -106,7 +158,21 @@
                     "}"))
 
 (deftest attach-style-animation-test
+
   (testing "allows attaching animations"
     (dom/attach-style ["keyframes-test-animation" ["keyframes-test-animation" test-animation]])
     (is (= 1 (get-in @dom/attached ["keyframes-test-animation" 1])))
     (is (= [animation-str] @css-captor))))
+
+(deftest supports?-test
+
+  (testing "false if css property is invalid"
+    (is (false? (dom/supports? "thisDoesNotExist" "block"))))
+
+  (testing "false if css value is invalid for property"
+    (is (false? (dom/supports? "display" "thisDoesNotExist"))))
+
+  (testing "true if value is supported"
+    (is (true? (dom/supports? 'display "block")))
+    (is (true? (dom/supports? :display "block")))
+    (is (true? (dom/supports? "display" "block")))))
