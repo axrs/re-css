@@ -14,7 +14,7 @@
                  [garden "1.3.9"]
                  [reagent "0.8.1" :scope "provided"]
                  [binaryage/oops "0.7.0"]
-                 [com.rpl/specter "1.1.2"]]
+                 [com.rpl/specter "1.1.3"]]
   :plugins [[lein-cljfmt "0.6.0"]]
   :cljfmt {:indents {doto     [[:block 0]]
                      :require [[:block 0]]
