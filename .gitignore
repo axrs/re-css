@@ -1,9 +1,10 @@
-pom.xml
-project.sh
+*.iml
 .cpcache
 .nrepl-port
 .shadow-cljs/
 /.idea
 /target
 node_modules/
+pom.xml
+project.sh
 test-target/js

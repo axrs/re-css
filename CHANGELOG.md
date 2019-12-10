@@ -1,3 +1,7 @@
+\#1.1.0
+
+-   Added css live-reloading
+
 # 1.0.0 / 2019-06-17
 
 -   Added CSS property support detection with `supports?`

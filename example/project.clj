@@ -4,4 +4,4 @@
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
   :plugins [[lein-parent "0.3.4"]]
   :parent-project {:path    "../project.clj"
-                   :inherit [:dependencies :repositories [:profiles :dev]]})
+                   :inherit [:dependencies [:profiles :dev]]})
