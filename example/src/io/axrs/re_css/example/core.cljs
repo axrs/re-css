@@ -1,14 +1,13 @@
 (ns io.axrs.re-css.example.core
   (:refer-clojure :exclude [count])
   (:require
-    [io.axrs.re-css.core :refer [defui classes]]
+    [io.axrs.re-css.core :refer [defui classes css-updated]]
     [reagent.core :as r :refer-macros [with-let]]
     [garden.stylesheet :as ss]
     [clojure.string :as string]))
 
-(def ^:private show? (r/atom false))
-(def ^:private count (r/atom (rand-int 5)))
-(def ^:private css-updated (r/atom nil))
+(defonce ^:private show? (r/atom true))
+(defonce ^:private count (r/atom (rand-int 5)))
 
 ;; CSS STYLES --------------------------------------------------------------------------------
 
@@ -105,11 +104,11 @@
   (let [styles (js/document.getElementsByTagName "style")]
     @css-updated
     [code {}
-     [:<>
-      "// ATTACHED Inline Stylesheets"
-      \newline
-      (string/join \newline
-        (map #(aget % "firstChild" "data") (array-seq styles)))]]))
+     (str
+       "// ATTACHED Inline Stylesheets"
+       \newline
+       (string/join \newline
+         (map #(aget % "firstChild" "data") (array-seq styles))))]))
 
 (defn view
   "A simple Reagent app view to track the number of button clicks"
@@ -134,11 +133,6 @@
 
 (defn mount-root
   []
-  ; Note: Do NOT watch the sheets storage in production.
-  ; It is only included here for debugging purposes to update what styles
-  ; have been appended to the HEAD of the page
-  (add-watch io.axrs.re-css.dom/attached :css-debug
-    (fn [& _] (reset! css-updated (js/Date.now))))
   (r/render [view]
     (js/document.getElementById "example")))
 

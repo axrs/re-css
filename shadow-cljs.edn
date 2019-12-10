@@ -1,12 +1,10 @@
 {:builds
-       {:test         {:closure-defines {goog.DEBUG false}
-                       :output-to       "target/karma/test.js"
+       {:test         {:output-to       "target/karma/test.js"
                        :ns-regexp       "-test$"
                        :target          :karma}
         :test-browser {:target          :browser-test
                        :test-dir        "target/browser/"
                        :ns-regexp       "-test$"
-                       :closure-defines {goog.DEBUG false}
                        :runner          shadow.test.browser
                        :ignore-warnings true
                        :devtools        {:http-port 8091
