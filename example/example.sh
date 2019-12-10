@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
-if [ ! -d 'node_modules/shadow-cljs' ]; then
+if [ ! -d 'node_modules' ]; then
 	echo "Installing node modules"
 	npm install
 fi
-npx shadow-cljs watch example
+
+shadow-cljs () {
+	lein trampoline run -m shadow.cljs.devtools.cli "$@"
+}
+
+shadow-cljs watch example

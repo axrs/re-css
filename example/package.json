@@ -5,13 +5,10 @@
   "homepage": "https://github.com/axrs/re-css/example",
   "dependencies": {
     "create-react-class": "^15.6.3",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "engines": {
     "node": ">=8.0.0"
-  },
-  "devDependencies": {
-    "shadow-cljs": "2.7.20"
   }
 }
