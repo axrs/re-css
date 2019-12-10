@@ -2,7 +2,11 @@
 
 Added:
 
--   css live-reloading
+-   CSS live-reloading. PR #25. Credits: @AndreTheHunter
+
+Changed:
+
+-   Updated dependencies
 
 # 1.0.0
 
@@ -19,7 +23,7 @@ Misc:
 
 Added:
 
--   Added the ability to use `defkeyframes` (and possibly other @ style css attributes)
+-   the ability to use `defkeyframes` (and possibly other @ style css attributes)
 
 # 0.2.0
 
@@ -31,24 +35,18 @@ Removed:
 
 Added:
 
--   Allow defining attributes as functions to be evaluated before style mount.
+-   defining attributes as functions to be evaluated before style mount.
 
 Changed:
 
--   CSS string generation to before style mount. PRs [#14][3].
+-   CSS string generation to before style mount. PR #14.
 
 # 0.1.0
 
 Added: 
 
--   support for global shared styles (i.e. @font-face). PRs [#13][1]. Credits: [@AndreTheHunter][2]
+-   support for global shared styles (i.e. @font-face). PR #13. Credits: @AndreTheHunter
 
 # 0.0.1
 
 Initial release
-
-[1]: https://github.com/axrs/re-css/pull/13
-
-[2]: https://github.com/AndreTheHunter
-
-[3]: https://github.com/axrs/re-css/pull/14
