@@ -1,36 +1,39 @@
 # re-css
 
-CSS-in-JS integration with [reagent][1] (for use in SPA frameworks like [re-frame][2])
+CSS-in-JS integration with [reagent](https://github.com/reagent-project/reagent) (for use in SPA frameworks like [re-frame](https://github.com/day8/re-frame))
 
-[![Clojars Project][13]][3]
-[![CircleCI][17]][16]
+[![Clojars Project](https://img.shields.io/clojars/v/io.axrs/re-css.svg)](https://clojars.org/io.axrs/re-css)
+[![CircleCI](https://circleci.com/gh/axrs/re-css.svg?style=svg)](https://circleci.com/gh/axrs/re-css)
+
 
 ## Table of Contents
 
--   [Overview](#overview)
+* [Overview](#overview)
 
--   [Getting Started](#getting-started)
+* [Getting Started](#getting-started)
 
-    -   [Example](#example)
+  * [Example](#example)
 
--   [Code Quality](#code-quality)
+* [Code Quality](#code-quality)
+
 
 ## Overview
 
-**re-css** provides a simplistic macro to independently style reagent components (Form-1, Form-2, and Form-3) in [re-frame][2]
-or [reagent][1] applications. Ultimately removing the pains of cascading styles, name collisions and code/style separation.
+**re-css** provides a simplistic macro to independently style reagent components (Form-1, Form-2, and Form-3) in [re-frame](https://github.com/day8/re-frame)
+or [reagent](https://github.com/reagent-project/reagent) applications. Ultimately removing the pains of cascading styles, name collisions and code/style separation.
 
 **re-css** injects individual inline stylesheets (defined adjacent to the component as EDN structures) into
 the HEAD of the document JUST before the component is mounted; and subsequently removes the styles once the
-component has been removed. All styles are [Garden][14] structures.
+component has been removed. All styles are [Garden](https://github.com/noprompt/garden) structures.
 
 **re-css** aims to:
 
--   Bring CSS and component code together
--   Reduce unnecessary CSS declaration (by only defining what the component needs, not what it has to override)
--   Remove a potential build tool (SASS/LESS)
--   Eliminate class name collisions
--   Provide a clean path moving forward (assist moving away from legacy styles)
+* Bring CSS and component code together
+* Reduce unnecessary CSS declaration (by only defining what the component needs, not what it has to override)
+* Remove a potential build tool (SASS/LESS)
+* Eliminate class name collisions
+* Provide a clean path moving forward (assist moving away from legacy styles)
+
 
 ## Getting Started
 
@@ -40,7 +43,7 @@ component has been removed. All styles are [Garden][14] structures.
 
 ### Example
 
-![Example][15]
+![Example](example/example.gif)
 
 ```clojure
 (ns io.axrs.re-css.example.core
@@ -118,9 +121,9 @@ component has been removed. All styles are [Garden][14] structures.
                              [:button (merge attrs (classes attrs [:button])) text])})
 ```
 
-[View Full Example][4]
+[View Full Example](example/src/io/axrs/re_css/example/core.cljs)
 
-> Running the example using [Shadow-CLJS][7]:
+> Running the example using [Shadow-CLJS](http://shadow-cljs.org/):
 
 ```bash
 git clone git@github.com:axrs/re-css.git
@@ -130,46 +133,13 @@ npx shadow-cljs watch example
 # Open a browser to http://localhost:8080
 ```
 
+
 ## Code Quality
 
 **re-css** uses several code quality tools (like linting) to ensure consistency in formatting between editors and developers.
-These tools should be automatically applied before each commit through the use of the [`pre-commit` hook][12].
+These tools should be automatically applied before each commit through the use of the [`pre-commit` hook](githooks/pre-commit).
 
-| Source            | Tool   | Website                                    |
-| ----------------- | ------ | ------------------------------------------ |
-| Markdown          | Remark | [https://remark.js.org/][5]                |
-| CLJ/CLJC/CLJS/EDN | cljfmt | [https://github.com/weavejester/cljfmt][6] |
-
-[1]: https://github.com/reagent-project/reagent
-
-[2]: https://github.com/Day8/re-frame
-
-[4]: example/src/io/axrs/re_css/example/core.cljs
-
-[5]: https://remark.js.org/
-
-[6]: https://github.com/weavejester/cljfmt
-
-[7]: http://shadow-cljs.org/
-
-[8]: #overview
-
-[9]: #getting-started
-
-[10]: #example
-
-[11]: #code-quality
-
-[12]: githooks/pre-commit
-
-[3]: https://clojars.org/io.axrs/re-css
-
-[13]: https://img.shields.io/clojars/v/io.axrs/re-css.svg
-
-[14]: https://github.com/noprompt/garden
-
-[15]: example/example.gif
-
-[16]: https://circleci.com/gh/axrs/re-css
-
-[17]: https://circleci.com/gh/axrs/re-css.svg?style=svg
+| Source            | Tool   | Website                                 |
+| ----------------- | ------ | --------------------------------------- |
+| Markdown          | Remark | <https://remark.js.org/>                |
+| CLJ/CLJC/CLJS/EDN | cljfmt | <https://github.com/weavejester/cljfmt> |

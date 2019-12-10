@@ -3,6 +3,18 @@
   "version": "0.2.0",
   "author": " @axrs",
   "homepage": "https://github.com/axrs/re-css",
+  "repository": "https://github.com/axrs/re-css",
+  "license": "Eclipse Public License - v1.0",
+  "contributors": [
+    {
+      "name": "Alexander Scott",
+      "website": "https://github.com/axrs"
+    },
+    {
+      "name": "André de Jager",
+      "website": "https://github.com/AndreTheHunter"
+    }
+  ],
   "dependencies": {
     "create-react-class": "^15.6.3",
     "react": "^16.12.0",
@@ -19,6 +31,7 @@
     "remark": "^9.0.0",
     "remark-bookmarks": "^1.0.0",
     "remark-cli": "^5.0.0",
+    "remark-preset-github": "0.0.16",
     "remark-preset-lint-recommended": "^3.0.3",
     "remark-toc": "^5.1.1"
   }

@@ -77,8 +77,7 @@ format () {
 	echo_message 'Formatting'
 	lein cljfmt fix
 	npx remark . \
-		--use remark-preset-lint-recommended \
-		--use remark-reference-links \
+		--use preset-github \
 		--use toc \
 		--use bookmarks -o
 }
