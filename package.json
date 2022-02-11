@@ -24,7 +24,7 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "karma": "^2.0.3",
+    "karma": "^6.3.14",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cljs-test": "^0.1.0",
     "karma-sourcemap-loader": "^0.3.7",
